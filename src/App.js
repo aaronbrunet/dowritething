@@ -1,25 +1,42 @@
-import logo from './logo.svg';
+import { useState } from 'react'
 import './App.css';
-import { HelloWorld } from './components/HelloWorld';
+import { HelloWorld } from './components/HelloWorld'
+import { AddWordCount } from './components/AddWordCount'
 
 function App() {
+  const [count,setCount] = useState(0)  
+  const [countList,addCountList] = useState([])
+
+  const update = newCount => {
+    setCount(newCount)
+  }
+
+  const addToList = newCount => {
+    const arr = countList
+    arr.push(newCount)
+    addCountList(arr)
+  }
+
+  const list = countList.map((item,index)=>(
+    <li className="index">{item}</li>
+  ))
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <HelloWorld />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
+        <HelloWorld />        
+        <AddWordCount count={count} _setCount={update} _addList={addToList}/>
+        <p className="count_p">
+        { count }
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank" 
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+        <p className="count-list_p">
+          Count list          
+        </p>
+        <ul>
+          {list}
+        </ul>
+
+      </header>      
     </div>
   );
 }
