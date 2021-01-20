@@ -26,16 +26,9 @@ function App() {
       <header className="App-header">
         <HelloWorld />        
         <AddWordCount count={count} _setCount={update} _addList={addToList}/>
-        <p className="count_p">
-        { count }
-        </p>
-        <p className="count-list_p">
-          Count list          
-        </p>
-        <ul>
-          {list}
-        </ul>
-
+        <h3 className="count_h3">Word Count: { count }</h3>
+        <h3 className="count-list_h3">Word Count History</h3>
+        <ul>{list}</ul>
       </header>      
     </div>
   );

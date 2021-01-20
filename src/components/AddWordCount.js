@@ -4,12 +4,12 @@ export const AddWordCount = props => {
     const [count,setCount] = useState(props.count)
     const [newCount,setNewCount] = useState(0)
 
-    const addCount = newCount => {
+    const addCount = newCount => {        
         let result = parseInt(count) + parseInt(newCount)
         setNewCount(0)
         props._setCount(result)
         setCount(result)
-        props._addList(newCount)  
+        props._addList(newCount) 
     }
 
     const handleInputChange = (input) => {
@@ -18,12 +18,16 @@ export const AddWordCount = props => {
     }
 
     const handleClick = () => {
-        addCount(newCount)        
+        if (newCount != 0) {
+            addCount(newCount)        
+        } else {
+            setNewCount(0)
+        }
     }
 
     return (
         <>
-        <input className="entry" type="number" name="new count" placeholder="Add new wordcount" value={newCount} onChange={(e) => handleInputChange(e.target.value)} />
+        <input className="entry" type="number" name="new_count" placeholder="Add new wordcount" value={newCount} onChange={(e) => handleInputChange(e.target.value)} />
         <button onClick={() => handleClick()}>Add Count</button>
         </>
     )
