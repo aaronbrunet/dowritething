@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import './App.css';
-import { HelloWorld } from './components/HelloWorld'
+import { Title } from './components/Title'
 import { AddWordCount } from './components/AddWordCount'
 
 function App() {
@@ -53,7 +53,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <HelloWorld />        
+        <Title />        
         <AddWordCount count={count} _setCount={update} _addList={addToList} list={countList}/>
         <h3 className="count_h3">Word Count: { count }</h3>
         <h4>Last Updated: {lastUpdate}</h4>

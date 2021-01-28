@@ -21,7 +21,7 @@ export const AddWordCount = props => {
     return (
         <>
         <input className="entry" type="number" name="new_count" placeholder="Add new wordcount" value={newCount} onChange={(e) => handleInputChange(e.target.value)} />
-        <button onClick={() => handleClick()}>Add Count</button>
+        <button onClick={() => handleClick()}>Add Word Count+</button>
         </>
     )
 

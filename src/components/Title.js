@@ -1,6 +1,6 @@
 import React from'react'
 
-export const HelloWorld = () => {
+export const Title = () => {
     return (
         <>
         <h1>Do (the) Write Thing</h1>
