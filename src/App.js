@@ -3,8 +3,6 @@ import './App.css';
 
 //firebase
 import firebase, { auth, provider, firestore } from './firebase.js'
-//import 'firebase/firestore'
-//import 'firebase/auth'
 
 //hooks
 import { useAuthState } from 'react-firebase-hooks/auth'
@@ -13,30 +11,16 @@ import { useCollectionData } from 'react-firebase-hooks/firestore'
 import { Title } from './components/Title'
 import { AddWordCount } from './components/AddWordCount'
 
-/*
-firebase.initializeApp({
-  apiKey: "//",
-  authDomain: "dowritething-4c0f3.firebaseapp.com",
-  projectId: "dowritething-4c0f3",
-  storageBucket: "dowritething-4c0f3.appspot.com",
-  messagingSenderId: "530471616269",
-  appId: "1:530471616269:web:b98c7b996259f924243a44",
-  measurementId: "G-19L5Y8YZGM"
-})
-*/
-//const auth = firebase.auth()
-//const firestore = firebase.firestore()
-
 function App() {
   const [count,setCount] = useState(0)  
   const [countList,addCountList] = useState([])
   const [lastUpdate,setLastUpdate] = useState('Never')
-  const [projectID,setProjectID] = useState(null)
+  const [currentProject,setCurrentProject] = useState(null)
+  const [totalCount,setTotalCount] = useState(0)
 
   const profile = {
     //id
-    //timestamp
-    
+    //timestamp    
     //settings
   }
 
@@ -58,9 +42,11 @@ function App() {
     //end date?
     //recurring freq?
     //count?
-
   }
-
+  const _setProject = (project) => {
+    setCurrentProject(project)
+    setTotalCount(project.wordcount)
+  }
 
   const update = newCount => {
     setCount(newCount)
@@ -109,23 +95,33 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
+      <div className='auth-panel'>{ user ? <><SignOut /> <p className='greeting'>Hi, {auth.currentUser.displayName}</p></>: <SignIn />}</div>
         <Title />
+        
       </header> 
         <div id="main">
-          {user ?
-          <>
-          <SignOut />
-          <AddWordCount count={count} _setCount={update} _addList={addToList} list={countList}/>
-          <h3 className="count_h3">Word Count: { count }</h3>
-          <h4>Last Updated: {lastUpdate}</h4>
-          <h3 className="count-list_h3">Word Count History</h3>
-          {countList.length>0 ? <ul>{list}</ul> : 'Add a wordcount above'}
-          <Projects setProjectID={setProjectID}/>
-          <WordCountList projectID={projectID}/>
-          
+          {user ? <>
+          <div className='left'>
+          <Projects _setProject={_setProject}/>  
+          <button>Add Project+</button>        
+          </div>
+          <div className='right'>
+          {currentProject && currentProject.id &&(<>
+            <div className='left-inner'>
+              <h1>{currentProject.name}</h1>
+              <p className='description'>{currentProject.description}</p>
+              <h3 className="count_h3">Word Count: { totalCount }</h3>
+              <h4>Last Updated: {lastUpdate}</h4>          
+              <AddWordCount count={count} _setCount={update} _addList={addToList} list={countList}/>          
+            </div>            
+            <div className='right-inner'>              
+              <WordCountList currentProject={currentProject}/>
+            </div>
+          </>)}
+          </div>
           </>
           :
-          <SignIn />
+          <h4>Welcome to Do (the) Write Thing</h4>
           }
 
         </div> 
@@ -158,29 +154,24 @@ function Projects(props) {
   const [projects] = useCollectionData(query,{idField: 'id'})
 
   return (<>
-    <p>Projects</p>
-    {projects && projects.map(project =><Project setProjectID={props.setProjectID} key={project.uid} project={project}/>)}
+    <h1>Projects</h1>
+    {projects && projects.map(project =><Project _setProject={props._setProject} key={project.uid} project={project}/>)}
   </>)
 }
 function Project(props) {
-  const {name,timestamp,id} = props.project
+  const {name,timestamp,id,wordcount} = props.project
   
-  return <h3 onClick={()=>props.setProjectID(id)}>Name: {name}</h3>
+  return <h3 onClick={()=>props._setProject(props.project)}>{name}</h3>
 }
 
-function WordCountList(props) {
-  //const userRef = firebase.firestore().collection('users').doc(auth.currentUser.uid)
-  //const projectRef = firestore.collection('projects').where('owner','==',userRef)
-
-  
-  const wcRef = firestore.collection('projects/'+props.projectID+'/wordcount')
+function WordCountList(props) {  
+  const wcRef = firestore.collection('projects/'+props.currentProject.id+'/wordcount')
   const query = wcRef.orderBy('timestamp','asc').limit(20)
-  //const query = wcRef.orderBy('timestamp').limit(20)
   const [wordcounts] = useCollectionData(query, {idField: 'id'})
 
   return (
     <>
-    <p>Wordcount History</p>
+    <h3 className="count-list_h3">Word Count History</h3>
     {wordcounts && wordcounts.map(wc => <WordCount key={wc.uid} wordcount={wc}/>)}
     </>
   )
@@ -188,7 +179,12 @@ function WordCountList(props) {
 
 function WordCount(props) {
   const {count,timestamp,uuid,project} = props.wordcount
-  return <p key={props.key}>Count: {count}; UUID: {uuid}</p>
+  const date = timestamp.toDate().toLocaleDateString()
+  const time = timestamp.toDate().toLocaleTimeString()
+  return (<div className='wc-history-item'>  
+  <h3 className='wc-history-item-count'>Count: {count}</h3>
+  <p className='wc-history-item-time'>Added on {date} at {time}</p>
+  </div>)
 }
 
 export default App;
