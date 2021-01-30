@@ -1,7 +1,24 @@
-import { useState } from 'react'
+import { React,useState } from 'react'
 import './App.css';
+
+//firebase
+import firebase from 'firebase/app'
+import 'firebase/firestore'
+import 'firebase/auth'
+
+//hooks
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { useCollectionData } from 'react-firebase-hooks/firestore'
+
 import { Title } from './components/Title'
 import { AddWordCount } from './components/AddWordCount'
+
+firebase.initializeApp({
+
+})
+
+const auth = firebase.auth()
+const firestore = firebase.firestore()
 
 function App() {
   const [count,setCount] = useState(0)  
