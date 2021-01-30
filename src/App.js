@@ -8,6 +8,35 @@ function App() {
   const [countList,addCountList] = useState([])
   const [lastUpdate,setLastUpdate] = useState('Never')
 
+  const profile = {
+    //id
+    //timestamp
+    
+    //settings
+  }
+
+  const project = {
+    //id
+    //timestamp
+    //title
+    //new 
+    //wordcount
+    //genre
+    //description
+  }
+
+  const goal = {
+    //id
+    //timestamp
+    //name?
+    //type
+    //end date?
+    //recurring freq?
+    //count?
+
+  }
+
+
   const update = newCount => {
     setCount(newCount)
     if(count < 0){setCount(0)}
