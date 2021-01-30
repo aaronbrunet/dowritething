@@ -56,15 +56,19 @@ button {
   padding-top: 20px;
 }
 .left {
+  min-height: 50vh;
   min-width: 150px;
-  padding: 20px;
+  width: 250px;
+  margin: 0px 50px;
   border: 1px solid rgba(128,128,128,.1);
   border-radius: 10px;
+  position: relative;
 }
 
 .right {
-  display: flex;
-  width: 50;
+  min-height: 50vh;
+  display: flex;  
+  width: 50vw;
 }
 .description {
   width: 300px;
@@ -83,14 +87,30 @@ button {
   padding: 10px;
 }
 
+.project-button {
+  position: absolute;
+  bottom: 0px;
+  left: 50%;
+  width: 100px;
+  margin-left: -50px;
+}
+
 button, .greeting {
   font-size: 12px;
+}
+
+.goal-panel {
+  border: 1px solid rgba(128,128,128,.1);
+  border-radius: 10px;
+  margin-bottom: 15px;
+  padding: 5px;
 }
 
 .auth-panel button {
   padding: 2px;
   margin-right: 5px;
 }
+
 
 .wc-history-item {
   border: 1px solid rgba(128,128,128,.1);
@@ -102,7 +122,7 @@ button, .greeting {
 .wc-history-item-count {
 
 }
-.wc-history-item-time {
+.wc-history-item-time, .goal-added {
   color: grey;
   font-size: 12px;
 }

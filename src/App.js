@@ -103,7 +103,7 @@ function App() {
           {user ? <>
           <div className='left'>
           <Projects _setProject={_setProject}/>  
-          <button>Add Project+</button>        
+          <button className='project-button'>Add Project+</button>        
           </div>
           <div className='right'>
           {currentProject && currentProject.id &&(<>
@@ -114,7 +114,8 @@ function App() {
               <h4>Last Updated: {lastUpdate}</h4>          
               <AddWordCount count={count} _setCount={update} _addList={addToList} list={countList}/>          
             </div>            
-            <div className='right-inner'>              
+            <div className='right-inner'>   
+              <GoalList currentProject={currentProject}/>
               <WordCountList currentProject={currentProject}/>
             </div>
           </>)}
@@ -157,12 +158,14 @@ function Projects(props) {
     <h1>Projects</h1>
     {projects && projects.map(project =><Project _setProject={props._setProject} key={project.uid} project={project}/>)}
   </>)
+
+  function Project(props) {
+    const {name,timestamp,id,wordcount} = props.project
+    
+    return <h3 onClick={()=>props._setProject(props.project)}>{name}</h3>
+  }
 }
-function Project(props) {
-  const {name,timestamp,id,wordcount} = props.project
-  
-  return <h3 onClick={()=>props._setProject(props.project)}>{name}</h3>
-}
+
 
 function WordCountList(props) {  
   const wcRef = firestore.collection('projects/'+props.currentProject.id+'/wordcount')
@@ -175,16 +178,50 @@ function WordCountList(props) {
     {wordcounts && wordcounts.map(wc => <WordCount key={wc.uid} wordcount={wc}/>)}
     </>
   )
+  function WordCount(props) {
+    const {count,timestamp,uuid,project} = props.wordcount
+    const date = timestamp.toDate().toLocaleDateString()
+    const time = timestamp.toDate().toLocaleTimeString()
+    return (<div className='wc-history-item'>  
+    <h3 className='wc-history-item-count'>Count: {count}</h3>
+    <p className='wc-history-item-time'>Added on {date} at {time}</p>
+    </div>)
+  }
 }
 
-function WordCount(props) {
-  const {count,timestamp,uuid,project} = props.wordcount
-  const date = timestamp.toDate().toLocaleDateString()
-  const time = timestamp.toDate().toLocaleTimeString()
-  return (<div className='wc-history-item'>  
-  <h3 className='wc-history-item-count'>Count: {count}</h3>
-  <p className='wc-history-item-time'>Added on {date} at {time}</p>
-  </div>)
+function GoalList(props) {  
+  const goalRef = firestore.collection('projects/'+props.currentProject.id+'/goals')
+  const query = goalRef.where('active','==',true).limit(3)
+  const [goals] = useCollectionData(query, {idField: 'id'})
+
+  return (
+    <div className='goal-panel'>
+    <h3>Goals</h3>
+    {goals && goals.length === 0 && (<p>No goal currently set.</p>)}
+    {goals && goals.map(goal => <Goal key={goal.uid} goal={goal}/>)}
+    <button>Add a Goal+</button>
+    </div>    
+  )
+  function Goal(props) {
+    const {count,timestamp,uuid,type,repeat,start,end} = props.goal
+    const date = timestamp.toDate().toLocaleDateString()
+    const time = timestamp.toDate().toLocaleTimeString()
+    const _start = start.toDate().toLocaleDateString()
+    const _end = end.toDate().toLocaleDateString()
+    return (<div className='goal-item'>  
+    <h3 className='goal-count'>Goal: {count} words</h3>
+    { type === 'fixed' && (<>
+      <p className='goal-fixed'>By {_end}</p>
+      <p className='goal-added'>Added on {date} at {time}</p>
+    </>)}
+    { type === 'recurring' && (<>
+      <p className='goal-repeat'>Per {repeat}</p>
+      <p className='goal-repeat'>From {_start} to {_end}</p>
+      <p className='goal-added'>Added on {date} at {time}</p>
+    </>)}
+    </div>)
+  }
 }
+
 
 export default App;
