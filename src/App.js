@@ -13,11 +13,11 @@ import { AddWordCount } from './components/AddWordCount'
 
 function App() {
   const [count,setCount] = useState(0)  
-  const [countList,addCountList] = useState([])
   const [lastUpdate,setLastUpdate] = useState('Never')
   const [currentProject,setCurrentProject] = useState(null)
   const [totalCount,setTotalCount] = useState(0)
 
+  /*
   const profile = {
     //id
     //timestamp    
@@ -43,53 +43,38 @@ function App() {
     //recurring freq?
     //count?
   }
+  */
+
   const _setProject = (project) => {
-    setCurrentProject(project)
-    setTotalCount(project.wordcount)
+    setCurrentProject(project)  
+    setTotalCount(project.wordcount)  
+    //console.log(`${nowDate} ${nowTime}`)
   }
 
   const update = newCount => {
     setCount(newCount)
+    console.log(newCount)
     if(count < 0){setCount(0)}
-    updateTime()
+    let result = parseInt(currentProject.wordcount) + parseInt(newCount)
+    setTotalCount(result)
+    console.log(result)
+    var timestamp = firebase.firestore.Timestamp.now()
+    var nowDate = timestamp.toDate().toLocaleDateString()
+    var nowTime = timestamp.toDate().toLocaleTimeString()
+    var formattedTime = `${nowDate} ${nowTime}`
+    setLastUpdate(()=>formattedTime)
+    console.log(lastUpdate)
+    firestore.collection('projects').doc(currentProject.id).update({
+      wordcount: result,
+      revised: timestamp
+    }).then(function(){
+      console.log('Time and count updated!')
+    }).catch(function(error) {
+      console.error('Error writing to document: '+error)
+    })
+    //updateTime()
   }
-
-  const addToList = newCount => {
-    const arr = countList
-    const now = Date().toLocaleString()
-    //const length = arr.length
-    const wordcount = {}
-    wordcount.count = newCount
-    wordcount.time = now
-    arr.push(wordcount)
-    addCountList(arr)    
-    updateTime()
-  }
-
-  const updateTime = () => {
-    let newUpdate = countList.length>0 ? countList.reduce((max,wordcount) => (wordcount.time > max ? wordcount.time : max),countList[0].time) : 'Never'
-    setLastUpdate(newUpdate)
-  }
-
-  const removeFromList = (value,idx) => {    
-    let result = parseInt(count) - parseInt(value)
-    update(result)
-    let arr = countList
-    arr = arr.filter((item,i) => i !== idx)
-    addCountList(arr)
-    if (arr.length === 0) {
-      setCount(0)
-    }
-    updateTime()
-  }
-
-  const list = countList.map((wordcount,index)=>(
-    <li key={index} className='list'>{wordcount.count} <button onClick={() => removeFromList(wordcount.count,index)}>X</button>
-    <br/>{wordcount.time}</li>
-  ))
-
-  //const lastUpdate = countList.length>0 ? countList.reduce((max,wordcount) => (wordcount.now > max ? wordcount.now: max),countList[0].now) : null
-
+  
   const [user] = useAuthState(auth)
   
   return (
@@ -102,31 +87,30 @@ function App() {
         <div id="main">
           {user ? <>
           <div className='left'>
-          <Projects _setProject={_setProject}/>  
-          <button className='project-button'>Add Project+</button>        
+            <Projects _setProject={_setProject}/>  
+            <button className='project-button'>Add Project+</button>        
           </div>
           <div className='right'>
-          {currentProject && currentProject.id &&(<>
+            {currentProject && currentProject.id &&(<>
             <div className='left-inner'>
               <h1>{currentProject.name}</h1>
               <p className='description'>{currentProject.description}</p>
               <h3 className="count_h3">Word Count: { totalCount }</h3>
               <h4>Last Updated: {lastUpdate}</h4>          
-              <AddWordCount count={count} _setCount={update} _addList={addToList} list={countList}/>          
+              <AddWordCount currentUser={user} currentProject={currentProject} count={count} _setCount={update} />          
             </div>            
             <div className='right-inner'>   
               <GoalList currentProject={currentProject}/>
               <WordCountList currentProject={currentProject}/>
             </div>
-          </>)}
+            </>)}
           </div>
           </>
           :
-          <h4>Welcome to Do (the) Write Thing</h4>
+            <h4>Welcome to Do (the) Write Thing</h4>
           }
 
         </div> 
-       
     </div>
   );
 }
@@ -135,7 +119,6 @@ function SignIn() {
   const signInAuth = () => {      
       auth.signInWithPopup(provider)
   }  
-
   return (    
     <button onClick={signInAuth}>Sign in</button>
   )
@@ -151,19 +134,16 @@ function Projects(props) {
   const userRef = firestore.collection('users').doc(auth.currentUser.uid)
   const projectRef = firestore.collection('projects')
   const query = projectRef.where('owner','==',userRef)
- // const query = projectRef.orderBy('timestamp')
   const [projects] = useCollectionData(query,{idField: 'id'})
 
   return (<>
     <h1>Projects</h1>
-    {projects && projects.map(project =><Project _setProject={props._setProject} key={project.uid} project={project}/>)}
+    <ul className='project-list'>
+    {//projects && projects.map(project =><Project _setProject={props._setProject} key={project.uid} project={project}/>)
+    }
+    {projects && projects.map(project =><li key={project.uid} className='project-list-item' onClick={()=>props._setProject(project)}><h3>{project.name}</h3></li>)    }
+    </ul>
   </>)
-
-  function Project(props) {
-    const {name,timestamp,id,wordcount} = props.project
-    
-    return <h3 onClick={()=>props._setProject(props.project)}>{name}</h3>
-  }
 }
 
 
@@ -179,7 +159,7 @@ function WordCountList(props) {
     </>
   )
   function WordCount(props) {
-    const {count,timestamp,uuid,project} = props.wordcount
+    const {count,timestamp} = props.wordcount
     const date = timestamp.toDate().toLocaleDateString()
     const time = timestamp.toDate().toLocaleTimeString()
     return (<div className='wc-history-item'>  
@@ -203,7 +183,7 @@ function GoalList(props) {
     </div>    
   )
   function Goal(props) {
-    const {count,timestamp,uuid,type,repeat,start,end} = props.goal
+    const {count,timestamp,type,repeat,start,end} = props.goal
     const date = timestamp.toDate().toLocaleDateString()
     const time = timestamp.toDate().toLocaleTimeString()
     const _start = start.toDate().toLocaleDateString()
@@ -222,6 +202,5 @@ function GoalList(props) {
     </div>)
   }
 }
-
 
 export default App;

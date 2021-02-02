@@ -1,13 +1,24 @@
 import React, { useState } from 'react'
+import firebase, { firestore } from '../firebase.js'
 
 export const AddWordCount = props => {
     const [newCount,setNewCount] = useState(0)
 
-    const addCount = newCount => {        
-        let result = parseInt(props.count) + parseInt(newCount)
+    const AddCount = newCount => {        
+        //let result = parseInt(props.count) + parseInt(newCount)
         setNewCount(0)
-        props._setCount(result)        
-        props._addList(newCount) 
+        props._setCount(newCount)        
+        //props._addList(newCount)       
+        const wcRef = firestore.collection('projects/'+props.currentProject.id+'/wordcount')
+        wcRef.add({
+            count: parseInt(newCount),
+            timestamp: firebase.firestore.Timestamp.now()
+        }).then(function(){
+            console.log('New count added!')
+          }).catch(function(error) {
+            console.error('Error adding new count: '+error)
+          })
+
     }
 
     const handleInputChange = input => {
@@ -15,7 +26,7 @@ export const AddWordCount = props => {
     }
 
     const handleClick = () => {
-        newCount !== 0 && addCount(newCount)        
+        newCount !== 0 && AddCount(newCount)        
     }
 
     return (
