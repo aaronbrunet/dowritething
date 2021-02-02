@@ -126,3 +126,6 @@ button, .greeting {
   color: grey;
   font-size: 12px;
 }
+.entry {
+  display: block;
+}

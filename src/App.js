@@ -16,13 +16,14 @@ function App() {
   const [lastUpdate,setLastUpdate] = useState('Never')
   const [currentProject,setCurrentProject] = useState(null)
   const [totalCount,setTotalCount] = useState(0)
+  const [edit,setEdit] = useState(false)
   const [user] = useAuthState(auth)
   const userRef = user ? firestore.collection('users').doc(auth.currentUser.uid) : null
 
   const dummyProject = {
-    name: 'Test Project',
+    name: '',
     wordcount: 0,
-    description: 'This is a dummy project. There is essentially no information provided.'
+    description: ''
   }
   /*
   const profile = {
@@ -55,6 +56,7 @@ function App() {
   const _setProject = (project) => {
     setCurrentProject(project)  
     setTotalCount(project.wordcount)  
+    console.log('Set project')
     //console.log(`${nowDate} ${nowTime}`)
   }
 
@@ -85,7 +87,7 @@ function App() {
     const now = firebase.firestore.Timestamp.now()
     //Add new project
     //var userRef = firestore.collection('users').doc(auth.currentUser.uid)
-    const projectRef = firestore.collection(`users/${auth.currentUser.uid}/projects`)
+    const projectRef = firestore.collection(`users/${auth.currentUser.uid}/projects`)     
    //const projectRef = firestore.collection('projects')
        projectRef.add({
             wordcount: project.wordcount,
@@ -94,11 +96,30 @@ function App() {
             description: project.description,
             owner: 'users/'+auth.currentUser.uid,
             revised: now
-        }).then(function(){
-            console.log('New count added!')
-          }).catch(function(error) {
-            console.error('Error adding new count: '+error)
+        }).then(function (docRef){
+          docRef.get().then(function(doc){            
+            var current = doc.data()             
+            if(current.wordcount > 0) {
+              const wcRef = firestore.collection(`users/${auth.currentUser.uid}/projects/${doc.id}/wordcount`)
+              //const wcRef = doc.collection('wordcount')
+              wcRef.add({
+                  count: parseInt(current.wordcount),
+                  timestamp: firebase.firestore.Timestamp.now()
+              }).then(function(){
+                  console.log('New count added!')
+                  setCurrentProject(()=>current)
+                }).catch(function(error) {
+                  console.error('Error adding new count: '+error)
+                })
+            } else {
+              setCurrentProject(()=>current)
+            }
+            setEdit(()=>!edit)
           })
+        }).catch(function(error) {
+            console.error('Error adding new count: '+error)
+        })        
+        
   }
 
   return (
@@ -116,22 +137,26 @@ function App() {
               _addProject={_addProject} 
               _userRef={userRef}
               dummyProject={dummyProject}
+              edit={edit}
+              _setEdit={setEdit}
               />                    
           </div>
           <div className='right'>
-            {currentProject && currentProject.id &&(<>
-            <div className='left-inner'>
-              <h1>{currentProject.name}</h1>
-              <p className='description'>{currentProject.description}</p>
-              <h3 className="count_h3">Word Count: { totalCount }</h3>
-              <h4>Last Updated: {lastUpdate}</h4>          
-              <AddWordCount currentUser={user} currentProject={currentProject} count={count} _setCount={_update} />          
-            </div>            
-            <div className='right-inner'>   
-              <GoalList currentProject={currentProject}/>
-              <WordCountList currentProject={currentProject}/>
-            </div>
-            </>)}
+              {currentProject && !edit &&(<>
+              <div className='left-inner'>
+                <h1>{currentProject.name}</h1>
+                <p className='description'>{currentProject.description}</p>
+                <h3 className="count_h3">Word Count: { currentProject.wordcount }</h3>
+                <h4>Last Updated: {lastUpdate}</h4>          
+                <AddWordCount currentUser={user} currentProject={currentProject} count={count} _setCount={_update} />          
+              </div>            
+              <div className='right-inner'>   
+                <GoalList currentProject={currentProject}/>
+                <WordCountList currentProject={currentProject}/>
+              </div>
+              </>)}
+              { edit && (<EditForm project={dummyProject} _addProject={_addProject}/>)}
+            
           </div>
           </>
           :
@@ -146,7 +171,19 @@ function App() {
 //Auth
 function SignIn() {
   const signInAuth = () => {      
-      auth.signInWithPopup(provider)
+      auth.signInWithPopup(provider).then(function(){
+        
+        const userRef = firestore.collection('users').doc(auth.currentUser.uid)
+        userRef.set({
+          name: auth.currentUser.displayName,
+          lastLogin: firebase.firestore.Timestamp.now(),
+          id: auth.currentUser.uid
+        }, { merge: true})
+        console.log('Signed in!')
+      }).catch(function(error) {
+        console.error('Error logging in: '+error)
+      })
+      
   }  
   return (    
     <button onClick={signInAuth}>Sign in</button>
@@ -156,6 +193,37 @@ function SignOut() {
   return auth.currentUser && (<>
     <button onClick={() => auth.signOut()}>Sign out</button>
   </>)
+}
+
+//Form
+function EditForm(props){
+  const [project,setProject] = useState(props.project)
+  const [name,setName] = useState()
+  const [description,setDescription] = useState()
+  const [wordcount,setWordcount] = useState()
+  const handleNameChange = input => {
+    setName(()=>input)
+    project.name = input
+    setProject(()=>project)
+  }
+  const handleDescChange = input => {
+    setDescription(()=>input)
+    project.description = input
+    setProject(()=>project)
+
+  }
+  const handleWCChange = input => {
+    setWordcount(()=>input)
+    project.wordcount = input
+    setProject(()=>project)
+
+  }
+  return (<div className='entry-form'>
+    <input className="entry" type="text" name="name" placeholder="Add a descriptive name" value={name} onChange={(e) => handleNameChange(e.target.value)} />
+    <input className="entry" type="textbox" name="description" placeholder="Add description" value={description} onChange={(e) => handleDescChange(e.target.value)} />
+    <input className="entry" type="number" name="wordcount" placeholder="Add a wordcount (if not starting a new project)" value={wordcount} onChange={(e) => handleWCChange(e.target.value)} />
+    <button className="entry" onClick={()=>props._addProject(project)}>Add{name ? ` '${name}' ` : ' '}as new project</button>
+  </div>)
 }
 
 //Projects
@@ -174,7 +242,7 @@ function Projects(props) {
     }
     {projects && projects.map(project =><li key={project.uid} className='project-list-item' onClick={()=>props._setProject(project)}><h3>{project.name}</h3></li>)    }
     </ul>
-    <button onClick={() => props._addProject(props.dummyProject)} className='project-button'>Add Project+</button>
+    <button onClick={() => props._setEdit(()=>!props.edit)} className='project-button'>Add Project+</button>
   </>)
 }
 
