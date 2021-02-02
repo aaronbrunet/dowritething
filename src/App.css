@@ -120,7 +120,7 @@ button, .greeting {
 }
 
 .wc-history-item-count {
-
+/**/
 }
 .wc-history-item-time, .goal-added {
   color: grey;
@@ -128,4 +128,6 @@ button, .greeting {
 }
 .entry {
   display: block;
+  width: 80%;
+  margin: auto;
 }

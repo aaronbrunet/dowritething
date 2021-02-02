@@ -25,6 +25,12 @@ function App() {
     wordcount: 0,
     description: ''
   }
+  
+  const formatTime = (timestamp) => {
+    var nowDate = timestamp.toDate().toLocaleDateString()
+    var nowTime = timestamp.toDate().toLocaleTimeString()
+    return `${nowDate} ${nowTime}`
+  }
   /*
   const profile = {
     //id
@@ -147,7 +153,7 @@ function App() {
                 <h1>{currentProject.name}</h1>
                 <p className='description'>{currentProject.description}</p>
                 <h3 className="count_h3">Word Count: { currentProject.wordcount }</h3>
-                <h4>Last Updated: {lastUpdate}</h4>          
+                <h4>Last Updated: {formatTime(currentProject.revised)}</h4>          
                 <AddWordCount currentUser={user} currentProject={currentProject} count={count} _setCount={_update} />          
               </div>            
               <div className='right-inner'>   
@@ -200,7 +206,8 @@ function EditForm(props){
   const [project,setProject] = useState(props.project)
   const [name,setName] = useState()
   const [description,setDescription] = useState()
-  const [wordcount,setWordcount] = useState()
+  const [type,setType] = useState('new')
+  const [wordcount,setWordcount] = useState(0)
   const handleNameChange = input => {
     setName(()=>input)
     project.name = input
@@ -221,7 +228,16 @@ function EditForm(props){
   return (<div className='entry-form'>
     <input className="entry" type="text" name="name" placeholder="Add a descriptive name" value={name} onChange={(e) => handleNameChange(e.target.value)} />
     <input className="entry" type="textbox" name="description" placeholder="Add description" value={description} onChange={(e) => handleDescChange(e.target.value)} />
-    <input className="entry" type="number" name="wordcount" placeholder="Add a wordcount (if not starting a new project)" value={wordcount} onChange={(e) => handleWCChange(e.target.value)} />
+    
+    <div className="entry-radio-group">
+      <label for="new-project">
+        <input type="radio" onClick={()=>setType('new')} name="new-project" value='new' checked={type==='new'}/>New Project
+      </label>
+      <label for="old-project">
+        <input type="radio" onClick={()=>setType('old')} name="old-project" value='old' checked={type==='old'} />Existing Project
+      </label>
+    </div>
+    {type === 'old' && (<input className="entry" type="number" name="wordcount" placeholder="Add a wordcount (if not starting a new project)" value={wordcount} onChange={(e) => handleWCChange(e.target.value)} />)}
     <button className="entry" onClick={()=>props._addProject(project)}>Add{name ? ` '${name}' ` : ' '}as new project</button>
   </div>)
 }
@@ -278,7 +294,7 @@ function GoalList(props) {
   return (
     <div className='goal-panel'>
     <h3>Goals</h3>
-    {goals && goals.length === 0 && (<p>No goal currently set.</p>)}
+    {(!goals || (goals && goals.length === 0)) && (<p>No goal currently set.</p>)}
     {goals && goals.map(goal => <Goal key={goal.uid} goal={goal}/>)}
     <button>Add a Goal+</button>
     </div>    
