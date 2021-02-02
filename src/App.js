@@ -16,7 +16,14 @@ function App() {
   const [lastUpdate,setLastUpdate] = useState('Never')
   const [currentProject,setCurrentProject] = useState(null)
   const [totalCount,setTotalCount] = useState(0)
+  const [user] = useAuthState(auth)
+  const userRef = user ? firestore.collection('users').doc(auth.currentUser.uid) : null
 
+  const dummyProject = {
+    name: 'Test Project',
+    wordcount: 0,
+    description: 'This is a dummy project. There is essentially no information provided.'
+  }
   /*
   const profile = {
     //id
@@ -51,7 +58,7 @@ function App() {
     //console.log(`${nowDate} ${nowTime}`)
   }
 
-  const update = newCount => {
+  const _update = newCount => {
     setCount(newCount)
     console.log(newCount)
     if(count < 0){setCount(0)}
@@ -64,7 +71,7 @@ function App() {
     var formattedTime = `${nowDate} ${nowTime}`
     setLastUpdate(()=>formattedTime)
     console.log(lastUpdate)
-    firestore.collection('projects').doc(currentProject.id).update({
+    firestore.collection(`users/${auth.currentUser.uid}/projects`).doc(currentProject.id).update({
       wordcount: result,
       revised: timestamp
     }).then(function(){
@@ -72,11 +79,28 @@ function App() {
     }).catch(function(error) {
       console.error('Error writing to document: '+error)
     })
-    //updateTime()
   }
   
-  const [user] = useAuthState(auth)
-  
+  const _addProject = (project) => {
+    const now = firebase.firestore.Timestamp.now()
+    //Add new project
+    //var userRef = firestore.collection('users').doc(auth.currentUser.uid)
+    const projectRef = firestore.collection(`users/${auth.currentUser.uid}/projects`)
+   //const projectRef = firestore.collection('projects')
+       projectRef.add({
+            wordcount: project.wordcount,
+            created: now,
+            name: project.name,
+            description: project.description,
+            owner: 'users/'+auth.currentUser.uid,
+            revised: now
+        }).then(function(){
+            console.log('New count added!')
+          }).catch(function(error) {
+            console.error('Error adding new count: '+error)
+          })
+  }
+
   return (
     <div className="App">
       <header className="App-header">
@@ -87,8 +111,12 @@ function App() {
         <div id="main">
           {user ? <>
           <div className='left'>
-            <Projects _setProject={_setProject}/>  
-            <button className='project-button'>Add Project+</button>        
+            <Projects 
+              _setProject={_setProject} 
+              _addProject={_addProject} 
+              _userRef={userRef}
+              dummyProject={dummyProject}
+              />                    
           </div>
           <div className='right'>
             {currentProject && currentProject.id &&(<>
@@ -97,7 +125,7 @@ function App() {
               <p className='description'>{currentProject.description}</p>
               <h3 className="count_h3">Word Count: { totalCount }</h3>
               <h4>Last Updated: {lastUpdate}</h4>          
-              <AddWordCount currentUser={user} currentProject={currentProject} count={count} _setCount={update} />          
+              <AddWordCount currentUser={user} currentProject={currentProject} count={count} _setCount={_update} />          
             </div>            
             <div className='right-inner'>   
               <GoalList currentProject={currentProject}/>
@@ -115,6 +143,7 @@ function App() {
   );
 }
 
+//Auth
 function SignIn() {
   const signInAuth = () => {      
       auth.signInWithPopup(provider)
@@ -123,17 +152,19 @@ function SignIn() {
     <button onClick={signInAuth}>Sign in</button>
   )
 }
-
 function SignOut() {  
   return auth.currentUser && (<>
     <button onClick={() => auth.signOut()}>Sign out</button>
   </>)
 }
 
-function Projects(props) {  
-  const userRef = firestore.collection('users').doc(auth.currentUser.uid)
-  const projectRef = firestore.collection('projects')
-  const query = projectRef.where('owner','==',userRef)
+//Projects
+function Projects(props) {    
+  //const projectRef = firestore.collection('projects')
+  //const query = projectRef.where('owner','==',props._userRef)
+  const projectRef = firestore.collection(`users/${auth.currentUser.uid}/projects`)
+  //const query = projectRef.where('owner','==',props._userRef)
+  const query = projectRef.orderBy('name')
   const [projects] = useCollectionData(query,{idField: 'id'})
 
   return (<>
@@ -143,12 +174,13 @@ function Projects(props) {
     }
     {projects && projects.map(project =><li key={project.uid} className='project-list-item' onClick={()=>props._setProject(project)}><h3>{project.name}</h3></li>)    }
     </ul>
+    <button onClick={() => props._addProject(props.dummyProject)} className='project-button'>Add Project+</button>
   </>)
 }
 
-
+//Wordcount
 function WordCountList(props) {  
-  const wcRef = firestore.collection('projects/'+props.currentProject.id+'/wordcount')
+  const wcRef = firestore.collection(`users/${auth.currentUser.uid}/projects/${props.currentProject.id}/wordcount`)
   const query = wcRef.orderBy('timestamp','asc').limit(20)
   const [wordcounts] = useCollectionData(query, {idField: 'id'})
 
@@ -169,8 +201,9 @@ function WordCountList(props) {
   }
 }
 
+//Goals
 function GoalList(props) {  
-  const goalRef = firestore.collection('projects/'+props.currentProject.id+'/goals')
+  const goalRef = firestore.collection(`users/${auth.currentUser.uid}/projects/${props.currentProject.id}/goals`)
   const query = goalRef.where('active','==',true).limit(3)
   const [goals] = useCollectionData(query, {idField: 'id'})
 

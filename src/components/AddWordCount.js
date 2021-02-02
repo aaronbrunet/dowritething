@@ -9,7 +9,7 @@ export const AddWordCount = props => {
         setNewCount(0)
         props._setCount(newCount)        
         //props._addList(newCount)       
-        const wcRef = firestore.collection('projects/'+props.currentProject.id+'/wordcount')
+        const wcRef = firestore.collection(`users/${props.currentUser.uid}/projects/${props.currentProject.id}/wordcount`)
         wcRef.add({
             count: parseInt(newCount),
             timestamp: firebase.firestore.Timestamp.now()
