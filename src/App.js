@@ -26,38 +26,12 @@ function App() {
     description: ''
   }
   
-  const formatTime = (timestamp) => {
+  //Worker Functions
+  const _formatTime = (timestamp) => {
     var nowDate = timestamp.toDate().toLocaleDateString()
     var nowTime = timestamp.toDate().toLocaleTimeString()
     return `${nowDate} ${nowTime}`
   }
-  /*
-  const profile = {
-    //id
-    //timestamp    
-    //settings
-  }
-
-  const project = {
-    //id
-    //timestamp
-    //title
-    //new 
-    //wordcount
-    //genre
-    //description
-  }
-
-  const goal = {
-    //id
-    //timestamp
-    //name?
-    //type
-    //end date?
-    //recurring freq?
-    //count?
-  }
-  */
 
   const _setProject = (project) => {
     setCurrentProject(project)  
@@ -74,9 +48,7 @@ function App() {
     setTotalCount(result)
     console.log(result)
     var timestamp = firebase.firestore.Timestamp.now()
-    var nowDate = timestamp.toDate().toLocaleDateString()
-    var nowTime = timestamp.toDate().toLocaleTimeString()
-    var formattedTime = `${nowDate} ${nowTime}`
+    var formattedTime = _formatTime(timestamp)
     setLastUpdate(()=>formattedTime)
     console.log(lastUpdate)
     firestore.collection(`users/${auth.currentUser.uid}/projects`).doc(currentProject.id).update({
@@ -153,7 +125,7 @@ function App() {
                 <h1>{currentProject.name}</h1>
                 <p className='description'>{currentProject.description}</p>
                 <h3 className="count_h3">Word Count: { currentProject.wordcount }</h3>
-                <h4>Last Updated: {formatTime(currentProject.revised)}</h4>          
+                <h4>Last Updated: {_formatTime(currentProject.revised)}</h4>          
                 <AddWordCount currentUser={user} currentProject={currentProject} count={count} _setCount={_update} />          
               </div>            
               <div className='right-inner'>   
@@ -173,6 +145,8 @@ function App() {
     </div>
   );
 }
+
+//Class Functions
 
 //Auth
 function SignIn() {
@@ -244,18 +218,13 @@ function EditForm(props){
 
 //Projects
 function Projects(props) {    
-  //const projectRef = firestore.collection('projects')
-  //const query = projectRef.where('owner','==',props._userRef)
-  const projectRef = firestore.collection(`users/${auth.currentUser.uid}/projects`)
-  //const query = projectRef.where('owner','==',props._userRef)
+  const projectRef = firestore.collection(`users/${auth.currentUser.uid}/projects`)  
   const query = projectRef.orderBy('name')
   const [projects] = useCollectionData(query,{idField: 'id'})
 
   return (<>
     <h1>Projects</h1>
-    <ul className='project-list'>
-    {//projects && projects.map(project =><Project _setProject={props._setProject} key={project.uid} project={project}/>)
-    }
+    <ul className='project-list'>    
     {projects && projects.map(project =><li key={project.uid} className='project-list-item' onClick={()=>props._setProject(project)}><h3>{project.name}</h3></li>)    }
     </ul>
     <button onClick={() => props._setEdit(()=>!props.edit)} className='project-button'>Add Project+</button>

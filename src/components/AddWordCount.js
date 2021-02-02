@@ -18,7 +18,6 @@ export const AddWordCount = props => {
           }).catch(function(error) {
             console.error('Error adding new count: '+error)
           })
-
     }
 
     const handleInputChange = input => {
