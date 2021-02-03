@@ -1,6 +1,9 @@
 import { React,useState } from 'react'
 import './App.css';
 
+//baseweb
+import { Button } from 'baseui'
+
 //firebase
 import firebase, { auth, provider, firestore } from './firebase.js'
 
@@ -100,49 +103,49 @@ function App() {
         
   }
 
-  return (
-    <div className="App">
-      <header className="App-header">
-      <div className='auth-panel'>{ user ? <><SignOut /> <p className='greeting'>Hi, {auth.currentUser.displayName}</p></>: <SignIn />}</div>
-        <Title />
-        
-      </header> 
-        <div id="main">
-          {user ? <>
-          <div className='left'>
-            <Projects 
-              _setProject={_setProject} 
-              _addProject={_addProject} 
-              _userRef={userRef}
-              dummyProject={dummyProject}
-              edit={edit}
-              _setEdit={setEdit}
-              />                    
-          </div>
-          <div className='right'>
-              {currentProject && !edit &&(<>
-              <div className='left-inner'>
-                <h1>{currentProject.name}</h1>
-                <p className='description'>{currentProject.description}</p>
-                <h3 className="count_h3">Word Count: { currentProject.wordcount }</h3>
-                <h4>Last Updated: {_formatTime(currentProject.revised)}</h4>          
-                <AddWordCount currentUser={user} currentProject={currentProject} count={count} _setCount={_update} />          
-              </div>            
-              <div className='right-inner'>   
-                <GoalList currentProject={currentProject}/>
-                <WordCountList currentProject={currentProject}/>
-              </div>
-              </>)}
-              { edit && (<EditForm project={dummyProject} _addProject={_addProject}/>)}
-            
-          </div>
-          </>
-          :
-            <h4>Welcome to Do (the) Write Thing</h4>
-          }
+  return (    
+      <div className="App">
+        <header className="App-header">
+        <div className='auth-panel'>{ user ? <><SignOut /> <p className='greeting'>Hi, {auth.currentUser.displayName}</p></>: <SignIn />}</div>
+          <Title />
+          
+        </header> 
+          <div id="main">
+            {user ? <>
+            <div className='left'>
+              <Projects 
+                _setProject={_setProject} 
+                _addProject={_addProject} 
+                _userRef={userRef}
+                dummyProject={dummyProject}
+                edit={edit}
+                _setEdit={setEdit}
+                />                    
+            </div>
+            <div className='right'>
+                {currentProject && !edit &&(<>
+                <div className='left-inner'>
+                  <h1>{currentProject.name}</h1>
+                  <p className='description'>{currentProject.description}</p>
+                  <h3 className="count_h3">Word Count: { currentProject.wordcount }</h3>
+                  <h4>Last Updated: {_formatTime(currentProject.revised)}</h4>          
+                  <AddWordCount currentUser={user} currentProject={currentProject} count={count} _setCount={_update} />          
+                </div>            
+                <div className='right-inner'>   
+                  <GoalList currentProject={currentProject}/>
+                  <WordCountList currentProject={currentProject}/>
+                </div>
+                </>)}
+                { edit && (<EditForm project={dummyProject} _addProject={_addProject}/>)}
+              
+            </div>
+            </>
+            :
+              <h4>Welcome to Do (the) Write Thing</h4>
+            }
 
-        </div> 
-    </div>
+          </div> 
+      </div>
   );
 }
 
