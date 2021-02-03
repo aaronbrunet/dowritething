@@ -14,6 +14,7 @@ import { Title } from './components/Title'
 import { AddWordCount } from './components/AddWordCount'
 
 //baseweb
+import {useStyletron} from 'baseui';
 import { Button, SIZE, SHAPE } from 'baseui/button'
 import {
   Display1,
@@ -34,8 +35,10 @@ import { Select } from "baseui/select";
 import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
 import { Block } from 'baseui/block';
+import Plus from 'baseui/icon/plus';
 
 function App() {
+  const [css, theme] = useStyletron();
   const [count,setCount] = useState(0)  
   const [lastUpdate,setLastUpdate] = useState('Never')
   const [currentProject,setCurrentProject] = useState()
@@ -62,8 +65,8 @@ function App() {
   const _setProject = (project) => {
     console.log(project)
     setCurrentProject(project)  
-    setTotalCount(project.wordcount)  
-    console.log('Set project '+project.name)
+    project && project.wordcount && setTotalCount(project.wordcount)  
+    //console.log('Set project '+project.name)
     //console.log(`${nowDate} ${nowTime}`)
   }
 
@@ -136,7 +139,18 @@ function App() {
         </header> 
           <div id="main">
             {user ? <>
-            <Card>
+            <Card overrides={{
+            Root: {
+              style: {
+                left: "50%",
+                maxWidth: "600px",
+                position: "relative",
+                top: "20px",
+                transform: "translate(-50%, 0)",
+                width: "95vw"
+              }
+            }
+          }}> 
               <StyledBody>
                 <Projects 
                   _setProject={_setProject} 
@@ -148,7 +162,18 @@ function App() {
                   />        
               </StyledBody>            
             </Card>
-            <Card>
+            <Card overrides={{
+              Root: {
+                style: {
+                  left: "50%",
+                  maxWidth: "600px",
+                  position: "relative",
+                  top: "20px",
+                  transform: "translate(-50%, 0)",
+                  width: "95vw"
+                }
+              }
+            }}>
             <StyledBody>
                 {currentProject && !edit &&(<>
                 <div className='left-inner'>
@@ -249,6 +274,7 @@ function EditForm(props){
 
 //Projects
 function Projects(props) {
+  const [css, theme] = useStyletron();
   const [value,setValue] = useState([]);    
   const projectRef = firestore.collection(`users/${auth.currentUser.uid}/projects`)  
   const query = projectRef.orderBy('name')
@@ -265,21 +291,34 @@ function Projects(props) {
 
   return (<>
     <h1>Projects</h1> 
-    <Block>
+    <Block className={css({display:'flex'})}>
     {projects &&
-    (<FormControl label="Projects">
+    (
       <Select 
         value={value} 
         onChange={({value})=>setProject(value)}
         placeholder= 'Choose a project'
         options={projects}     
         labelKey="name"
-        valueKey="id"  
-        />
-      </FormControl>)}   
+        valueKey="id" 
+        overrides={{
+          Root: {
+            style: {
+              width: '80%',
+              marginRight: theme.sizing.scale400,
+            },
+          },
+        }} 
+        />)}   
     {//projects && projects.map(project =><li key={project.uid} className='project-list-item' onClick={()=>props._setProject(project)}><h3>{project.name}</h3></li>)    
     }    
-    <Button shape={SHAPE.pill} onClick={() => props._setEdit(()=>!props.edit)}>Add Project+</Button>
+    <Button 
+    shape={SHAPE.pill} 
+    size={SIZE.compact}
+    onClick={() => props._setEdit(()=>!props.edit)}
+    endEnhancer={()=> <Plus size={18} />}>
+      Add Project
+      </Button>
     </Block>
   </>)
 }
@@ -318,7 +357,11 @@ function GoalList(props) {
     <h3>Goals</h3>
     {(!goals || (goals && goals.length === 0)) && (<p>No goal currently set.</p>)}
     {goals && goals.map(goal => <Goal key={goal.uid} goal={goal}/>)}
-    <Button size={SIZE.large} shape={SHAPE.pill}>Add a Goal+</Button>
+    <Button 
+    size={SIZE.large} 
+    shape={SHAPE.pill}
+    endEnhancer={()=> <Plus size={18} />}>
+      Add a Goal</Button>
     </div>    
   )
   function Goal(props) {

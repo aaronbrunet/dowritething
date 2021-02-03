@@ -2,11 +2,15 @@ import React, { useState } from 'react'
 import firebase, { firestore } from '../firebase.js'
 
 //baseweb
+import {useStyletron} from 'baseui';
 import { Button } from 'baseui/button'
 import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
+import Plus from 'baseui/icon/plus';
+
 
 export const AddWordCount = props => {
+    const [css, theme] = useStyletron();
     const [newCount,setNewCount] = useState(0)
 
     const AddCount = newCount => {        
@@ -35,9 +39,20 @@ export const AddWordCount = props => {
 
     return (<>
         <FormControl label={()=> 'Add a new wordcount update'}>
-        <Input endEnhancer="words" type="number" name="new_count" placeholder="" value={newCount} onChange={(e) => handleInputChange(e.target.value)} clearable />        
+        <Input overrides={{
+          Root: {
+            style: {
+              width: '30%',
+              marginRight: theme.sizing.scale400,
+            },
+          },
+        }}
+        endEnhancer="words" type="number" name="new_count" placeholder="" value={newCount} onChange={(e) => handleInputChange(e.target.value)} clearable />        
         </FormControl>
-        <Button onClick={() => handleClick()}>Add Word Count+</Button>
+        <Button 
+        onClick={() => handleClick()}
+        endEnhancer={()=> <Plus size={18} />}>
+            Add Word Count</Button>
     </>)
 
 }
