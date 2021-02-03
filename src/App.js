@@ -1,8 +1,7 @@
 import { React,useState } from 'react'
 import './App.css';
 
-//baseweb
-import { Button } from 'baseui'
+
 
 //firebase
 import firebase, { auth, provider, firestore } from './firebase.js'
@@ -14,10 +13,32 @@ import { useCollectionData } from 'react-firebase-hooks/firestore'
 import { Title } from './components/Title'
 import { AddWordCount } from './components/AddWordCount'
 
+//baseweb
+import { Button, SIZE, SHAPE } from 'baseui/button'
+import {
+  Display1,
+  Display2,
+  Display3,
+  Display4,
+  Label1,
+  Label2,
+  Label3,
+  Label4,
+  Paragraph1,
+  Paragraph2,
+  Paragraph3,
+  Paragraph4,
+} from 'baseui/typography';
+import { Card, StyledBody, StyledAction } from "baseui/card";
+import { Select } from "baseui/select";
+import { FormControl } from "baseui/form-control";
+import { Input } from "baseui/input";
+import { Block } from 'baseui/block';
+
 function App() {
   const [count,setCount] = useState(0)  
   const [lastUpdate,setLastUpdate] = useState('Never')
-  const [currentProject,setCurrentProject] = useState(null)
+  const [currentProject,setCurrentProject] = useState()
   const [totalCount,setTotalCount] = useState(0)
   const [edit,setEdit] = useState(false)
   const [user] = useAuthState(auth)
@@ -26,7 +47,9 @@ function App() {
   const dummyProject = {
     name: '',
     wordcount: 0,
-    description: ''
+    description: '',
+    revised: null,
+    created: null
   }
   
   //Worker Functions
@@ -37,9 +60,10 @@ function App() {
   }
 
   const _setProject = (project) => {
+    console.log(project)
     setCurrentProject(project)  
     setTotalCount(project.wordcount)  
-    console.log('Set project')
+    console.log('Set project '+project.name)
     //console.log(`${nowDate} ${nowTime}`)
   }
 
@@ -106,29 +130,32 @@ function App() {
   return (    
       <div className="App">
         <header className="App-header">
-        <div className='auth-panel'>{ user ? <><SignOut /> <p className='greeting'>Hi, {auth.currentUser.displayName}</p></>: <SignIn />}</div>
-          <Title />
+        <div className='auth-panel'>{ user ? <><SignOut /> <Paragraph1>Hi, {auth.currentUser.displayName}</Paragraph1></>: <SignIn />}</div>
+          <Display1>Do(the)Write Thing</Display1>
           
         </header> 
           <div id="main">
             {user ? <>
-            <div className='left'>
-              <Projects 
-                _setProject={_setProject} 
-                _addProject={_addProject} 
-                _userRef={userRef}
-                dummyProject={dummyProject}
-                edit={edit}
-                _setEdit={setEdit}
-                />                    
-            </div>
-            <div className='right'>
+            <Card>
+              <StyledBody>
+                <Projects 
+                  _setProject={_setProject} 
+                  _addProject={_addProject} 
+                  _userRef={userRef}
+                  dummyProject={dummyProject}
+                  edit={edit}
+                  _setEdit={setEdit}
+                  />        
+              </StyledBody>            
+            </Card>
+            <Card>
+            <StyledBody>
                 {currentProject && !edit &&(<>
                 <div className='left-inner'>
                   <h1>{currentProject.name}</h1>
                   <p className='description'>{currentProject.description}</p>
                   <h3 className="count_h3">Word Count: { currentProject.wordcount }</h3>
-                  <h4>Last Updated: {_formatTime(currentProject.revised)}</h4>          
+                  <h4>Last Updated: {currentProject.revised && _formatTime(currentProject.revised)}</h4>          
                   <AddWordCount currentUser={user} currentProject={currentProject} count={count} _setCount={_update} />          
                 </div>            
                 <div className='right-inner'>   
@@ -138,7 +165,8 @@ function App() {
                 </>)}
                 { edit && (<EditForm project={dummyProject} _addProject={_addProject}/>)}
               
-            </div>
+            </StyledBody>
+            </Card>
             </>
             :
               <h4>Welcome to Do (the) Write Thing</h4>
@@ -169,12 +197,12 @@ function SignIn() {
       
   }  
   return (    
-    <button onClick={signInAuth}>Sign in</button>
+    <Button size={SIZE.compact} onClick={signInAuth}>Sign in</Button>
   )
 }
 function SignOut() {  
   return auth.currentUser && (<>
-    <button onClick={() => auth.signOut()}>Sign out</button>
+    <Button size={SIZE.compact} onClick={() => auth.signOut()}>Sign out</Button>
   </>)
 }
 
@@ -215,22 +243,44 @@ function EditForm(props){
       </label>
     </div>
     {type === 'old' && (<input className="entry" type="number" name="wordcount" placeholder="Add a wordcount (if not starting a new project)" value={wordcount} onChange={(e) => handleWCChange(e.target.value)} />)}
-    <button className="entry" onClick={()=>props._addProject(project)}>Add{name ? ` '${name}' ` : ' '}as new project</button>
+    <Button size={SIZE.large} shape={SHAPE.pill} onClick={()=>props._addProject(project)}>Add{name ? ` '${name}' ` : ' '}as new project</Button>
   </div>)
 }
 
 //Projects
-function Projects(props) {    
+function Projects(props) {
+  const [value,setValue] = useState([]);    
   const projectRef = firestore.collection(`users/${auth.currentUser.uid}/projects`)  
   const query = projectRef.orderBy('name')
   const [projects] = useCollectionData(query,{idField: 'id'})
 
+  const setProject = (input) => {
+    setValue(()=>input)
+    props._setProject(input[0])
+  }
+
+  function mapObjectToString(object) {
+    return object.name
+  }
+
   return (<>
-    <h1>Projects</h1>
-    <ul className='project-list'>    
-    {projects && projects.map(project =><li key={project.uid} className='project-list-item' onClick={()=>props._setProject(project)}><h3>{project.name}</h3></li>)    }
-    </ul>
-    <button onClick={() => props._setEdit(()=>!props.edit)} className='project-button'>Add Project+</button>
+    <h1>Projects</h1> 
+    <Block>
+    {projects &&
+    (<FormControl label="Projects">
+      <Select 
+        value={value} 
+        onChange={({value})=>setProject(value)}
+        placeholder= 'Choose a project'
+        options={projects}     
+        labelKey="name"
+        valueKey="id"  
+        />
+      </FormControl>)}   
+    {//projects && projects.map(project =><li key={project.uid} className='project-list-item' onClick={()=>props._setProject(project)}><h3>{project.name}</h3></li>)    
+    }    
+    <Button shape={SHAPE.pill} onClick={() => props._setEdit(()=>!props.edit)}>Add Project+</Button>
+    </Block>
   </>)
 }
 
@@ -268,7 +318,7 @@ function GoalList(props) {
     <h3>Goals</h3>
     {(!goals || (goals && goals.length === 0)) && (<p>No goal currently set.</p>)}
     {goals && goals.map(goal => <Goal key={goal.uid} goal={goal}/>)}
-    <button>Add a Goal+</button>
+    <Button size={SIZE.large} shape={SHAPE.pill}>Add a Goal+</Button>
     </div>    
   )
   function Goal(props) {

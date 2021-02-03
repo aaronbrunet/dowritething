@@ -1,5 +1,5 @@
 .App {
-  text-align: center;
+  /* text-align: center; */
 }
 
 .App-logo {
@@ -50,10 +50,10 @@ button {
 }
 
 #main {
-  display: flex;
+  /* display: flex;
   width: 100%;
   justify-content: space-around;
-  padding-top: 20px;
+  padding-top: 20px; */
 }
 .left {
   min-height: 50vh;
@@ -83,8 +83,6 @@ button {
   position: absolute;
   left: 0;
   top: 0;
-  display: flex;
-  padding: 10px;
 }
 
 .project-button {
@@ -95,9 +93,6 @@ button {
   margin-left: -50px;
 }
 
-button, .greeting {
-  font-size: 12px;
-}
 
 .goal-panel {
   border: 1px solid rgba(128,128,128,.1);

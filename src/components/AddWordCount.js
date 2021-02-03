@@ -1,6 +1,11 @@
 import React, { useState } from 'react'
 import firebase, { firestore } from '../firebase.js'
 
+//baseweb
+import { Button } from 'baseui/button'
+import { FormControl } from "baseui/form-control";
+import { Input } from "baseui/input";
+
 export const AddWordCount = props => {
     const [newCount,setNewCount] = useState(0)
 
@@ -28,11 +33,11 @@ export const AddWordCount = props => {
         newCount !== 0 && AddCount(newCount)        
     }
 
-    return (
-        <>
-        <input className="entry" type="number" name="new_count" placeholder="Add new wordcount" value={newCount} onChange={(e) => handleInputChange(e.target.value)} />
-        <button onClick={() => handleClick()}>Add Word Count+</button>
-        </>
-    )
+    return (<>
+        <FormControl label={()=> 'Add a new wordcount update'}>
+        <Input endEnhancer="words" type="number" name="new_count" placeholder="" value={newCount} onChange={(e) => handleInputChange(e.target.value)} clearable />        
+        </FormControl>
+        <Button onClick={() => handleClick()}>Add Word Count+</Button>
+    </>)
 
 }
