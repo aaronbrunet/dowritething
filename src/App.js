@@ -10,6 +10,9 @@ import { useCollectionData } from 'react-firebase-hooks/firestore'
 
 import { Title } from './components/Title'
 import { AddWordCount } from './components/AddWordCount'
+import { Select } from './components/Select'
+
+import { _formatTime as formatTime } from './utils/Utils.js'
 
 function App() {
   const [count,setCount] = useState(0)  
@@ -34,8 +37,8 @@ function App() {
   }
 
   const _setProject = (project) => {
-    setCurrentProject(project)  
-    setTotalCount(project.wordcount)  
+    project && setCurrentProject(project)  
+    project && setTotalCount(project.wordcount)  
     console.log('Set project')
     //console.log(`${nowDate} ${nowTime}`)
   }
@@ -48,7 +51,7 @@ function App() {
     setTotalCount(result)
     console.log(result)
     var timestamp = firebase.firestore.Timestamp.now()
-    var formattedTime = _formatTime(timestamp)
+    var formattedTime = formatTime(timestamp)
     setLastUpdate(()=>formattedTime)
     console.log(lastUpdate)
     firestore.collection(`users/${auth.currentUser.uid}/projects`).doc(currentProject.id).update({
@@ -110,6 +113,7 @@ function App() {
         <div id="main">
           {user ? <>
           <div className='left'>
+            
             <Projects 
               _setProject={_setProject} 
               _addProject={_addProject} 
@@ -125,7 +129,7 @@ function App() {
                 <h1>{currentProject.name}</h1>
                 <p className='description'>{currentProject.description}</p>
                 <h3 className="count_h3">Word Count: { currentProject.wordcount }</h3>
-                <h4>Last Updated: {_formatTime(currentProject.revised)}</h4>          
+                <h4>Last Updated: {currentProject.revised && formatTime(currentProject.revised)}</h4>          
                 <AddWordCount currentUser={user} currentProject={currentProject} count={count} _setCount={_update} />          
               </div>            
               <div className='right-inner'>   
@@ -222,11 +226,23 @@ function Projects(props) {
   const query = projectRef.orderBy('name')
   const [projects] = useCollectionData(query,{idField: 'id'})
 
+  const setProject = (input) => {
+    //setValue(()=>input)
+    props._setProject(input)
+  }
+
   return (<>
     <h1>Projects</h1>
-    <ul className='project-list'>    
+    <Select 
+      name="Projects" 
+      options={projects} 
+      placeholder="Select Project" 
+      _onChange={setProject}      
+      />
+
+    {/* <ul className='project-list'>    
     {projects && projects.map(project =><li key={project.uid} className='project-list-item' onClick={()=>props._setProject(project)}><h3>{project.name}</h3></li>)    }
-    </ul>
+    </ul> */}
     <button onClick={() => props._setEdit(()=>!props.edit)} className='project-button'>Add Project+</button>
   </>)
 }
