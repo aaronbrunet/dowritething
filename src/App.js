@@ -12,7 +12,7 @@ import { Title } from './components/Title'
 import { AddWordCount } from './components/AddWordCount'
 import { Select } from './components/Select'
 
-import { _formatTime as formatTime } from './utils/Utils.js'
+import { _formatTime as formatTime, _puppetFields } from './utils/Utils.js'
 
 function App() {
   const [count,setCount] = useState(0)  
@@ -186,6 +186,15 @@ function EditForm(props){
   const [description,setDescription] = useState()
   const [type,setType] = useState('new')
   const [wordcount,setWordcount] = useState(0)
+  const fields = [{type:'text',name:'Title',value:'Test Project'},{type:'number',name:'Count',value:150}]
+  
+  const puppetFields = (fields) => {
+    return fields.map(field => {
+        return(<label htmlFor={field.name}>{field.name}
+        <input type={field.type} name={field.name} value={field.value}/></label>
+    )})
+  }
+
   const handleNameChange = input => {
     setName(()=>input)
     project.name = input
@@ -203,15 +212,17 @@ function EditForm(props){
     setProject(()=>project)
 
   }
-  return (<div className='entry-form'>
+  return (
+  <div className='entry-form'>
+    {_puppetFields(fields)}
     <input className="entry" type="text" name="name" placeholder="Add a descriptive name" value={name} onChange={(e) => handleNameChange(e.target.value)} />
     <input className="entry" type="textbox" name="description" placeholder="Add description" value={description} onChange={(e) => handleDescChange(e.target.value)} />
     
     <div className="entry-radio-group">
-      <label for="new-project">
+      <label htmlFor="new-project">
         <input type="radio" onClick={()=>setType('new')} name="new-project" value='new' checked={type==='new'}/>New Project
       </label>
-      <label for="old-project">
+      <label htmlFor="old-project">
         <input type="radio" onClick={()=>setType('old')} name="old-project" value='old' checked={type==='old'} />Existing Project
       </label>
     </div>
