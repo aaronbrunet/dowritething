@@ -13,7 +13,9 @@ import { AddWordCount } from './components/AddWordCount'
 import { Select } from './components/Select'
 
 import { _formatTime as formatTime, _formatDate as formatDate, _interpretFields as interpretFields } from './utils/Utils.js'
-import { projectModel } from './constants/Constants.js'
+import { projectModel } from './constants/Constants'
+
+import { SignIn, SignOut } from './security/Security'
 
 function App() {
   const [count,setCount] = useState(0)  
@@ -163,33 +165,6 @@ function App() {
 }
 
 //Class Functions
-
-//Auth
-function SignIn() {
-  const signInAuth = () => {      
-      auth.signInWithPopup(provider).then(function(){
-        
-        const userRef = firestore.collection('users').doc(auth.currentUser.uid)
-        userRef.set({
-          name: auth.currentUser.displayName,
-          lastLogin: firebase.firestore.Timestamp.now(),
-          id: auth.currentUser.uid
-        }, { merge: true})
-        console.log('Signed in!')
-      }).catch(function(error) {
-        console.error('Error logging in: '+error)
-      })
-      
-  }  
-  return (    
-    <button onClick={signInAuth}>Sign in</button>
-  )
-}
-function SignOut() {  
-  return auth.currentUser && (<>
-    <button onClick={() => auth.signOut()}>Sign out</button>
-  </>)
-}
 
 //Form
 function EditForm(props){
