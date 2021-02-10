@@ -8,7 +8,7 @@ export const Select = ( props ) => {
         setSelected(input)
         let index = options.findIndex(option => { return option.id === input })
         _onChange(options[index])
-        console.log(options[index])
+        //console.log(options[index])
     }
 
     return (

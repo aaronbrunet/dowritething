@@ -12,14 +12,16 @@ import { Title } from './components/Title'
 import { AddWordCount } from './components/AddWordCount'
 import { Select } from './components/Select'
 
-import { _formatTime as formatTime, _puppetFields } from './utils/Utils.js'
+import { _formatTime as formatTime, _formatDate as formatDate, _interpretFields as interpretFields } from './utils/Utils.js'
+import { projectModel } from './constants/Constants.js'
 
 function App() {
   const [count,setCount] = useState(0)  
   const [lastUpdate,setLastUpdate] = useState('Never')
   const [currentProject,setCurrentProject] = useState(null)
   const [totalCount,setTotalCount] = useState(0)
-  const [edit,setEdit] = useState(false)
+  const [editing,setEditing] = useState(false)
+  const [editType,setEditType] = useState('add')
   const [user] = useAuthState(auth)
   const userRef = user ? firestore.collection('users').doc(auth.currentUser.uid) : null
 
@@ -28,14 +30,17 @@ function App() {
     wordcount: 0,
     description: ''
   }
-  
-  //Worker Functions
-  const _formatTime = (timestamp) => {
-    var nowDate = timestamp.toDate().toLocaleDateString()
-    var nowTime = timestamp.toDate().toLocaleTimeString()
-    return `${nowDate} ${nowTime}`
-  }
 
+  const setEdit = () => {
+    //editType === 'edit' ? setEditType('') : setEditType('edit')
+    setEditType('edit')
+    setEditing(()=>!editing)    
+  }
+  const setAdd = () => {
+    setEditType('add')
+    setEditing(()=>!editing)
+   // editType === 'add' ? setEditType('') : setEditType('add')
+  }
   const _setProject = (project) => {
     project && setCurrentProject(project)  
     project && setTotalCount(project.wordcount)  
@@ -95,7 +100,7 @@ function App() {
             } else {
               setCurrentProject(()=>current)
             }
-            setEdit(()=>!edit)
+            setEditing(()=>!editing)
           })
         }).catch(function(error) {
             console.error('Error adding new count: '+error)
@@ -112,21 +117,21 @@ function App() {
       </header> 
         <div id="main">
           {user ? <>
-          <div className='left'>
+          <div id='project-select' className='left'>
             
             <Projects 
               _setProject={_setProject} 
               _addProject={_addProject} 
               _userRef={userRef}
               dummyProject={dummyProject}
-              edit={edit}
-              _setEdit={setEdit}
+              edit={editing}
+              _setAdd={setAdd}
               />                    
           </div>
-          <div className='right'>
-              {currentProject && !edit &&(<>
+          <div id='project-view' className='right'>
+              {currentProject && !editing &&(<>
               <div className='left-inner'>
-                <h1>{currentProject.name}</h1>
+                <h1>{currentProject.name}</h1><button onClick={()=>setEdit()}>Edit</button>
                 <p className='description'>{currentProject.description}</p>
                 <h3 className="count_h3">Word Count: { currentProject.wordcount }</h3>
                 <h4>Last Updated: {currentProject.revised && formatTime(currentProject.revised)}</h4>          
@@ -137,9 +142,16 @@ function App() {
                 <WordCountList currentProject={currentProject}/>
               </div>
               </>)}
-              { edit && (<EditForm project={dummyProject} _addProject={_addProject}/>)}
+              { editing && <EditForm editType={editType} 
+                                      input={currentProject} 
+                                      model={projectModel} 
+                                      project={dummyProject} 
+                                      _addProject={_addProject}
+                                      _setEditing={setEditing}
+                                      editing={editing}
+                                      />}
             
-          </div>
+          </div> 
           </>
           :
             <h4>Welcome to Do (the) Write Thing</h4>
@@ -186,15 +198,17 @@ function EditForm(props){
   const [description,setDescription] = useState()
   const [type,setType] = useState('new')
   const [wordcount,setWordcount] = useState(0)
-  const fields = [{type:'text',name:'Title',value:'Test Project'},{type:'number',name:'Count',value:150}]
+  //const fields = [{type:'text',name:'Title',value:'Test Project'},{type:'number',name:'Count',value:150}]
   
-  const puppetFields = (fields) => {
-    return fields.map(field => {
-        return(<label htmlFor={field.name}>{field.name}
-        <input type={field.type} name={field.name} value={field.value}/></label>
-    )})
-  }
+  // const puppetFields = (fields) => {
+  //   return fields.map(field => {
+  //       return(<label htmlFor={field.name}>{field.name}
+  //       <input type={field.type} name={field.name} value={field.value}/></label>
+  //   )})
+  // }
 
+  const input = props.input, model = props.model
+  
   const handleNameChange = input => {
     setName(()=>input)
     project.name = input
@@ -210,11 +224,18 @@ function EditForm(props){
     setWordcount(()=>input)
     project.wordcount = input
     setProject(()=>project)
-
   }
+
+  const setEditing = () => {
+    console.log('Cancel editing')
+    props._setEditing(()=>!props.editing)
+  }
+
   return (
   <div className='entry-form'>
-    {_puppetFields(fields)}
+    {props.editType}
+    {props.editType === 'add' && (    
+    <>
     <input className="entry" type="text" name="name" placeholder="Add a descriptive name" value={name} onChange={(e) => handleNameChange(e.target.value)} />
     <input className="entry" type="textbox" name="description" placeholder="Add description" value={description} onChange={(e) => handleDescChange(e.target.value)} />
     
@@ -228,6 +249,13 @@ function EditForm(props){
     </div>
     {type === 'old' && (<input className="entry" type="number" name="wordcount" placeholder="Add a wordcount (if not starting a new project)" value={wordcount} onChange={(e) => handleWCChange(e.target.value)} />)}
     <button className="entry" onClick={()=>props._addProject(project)}>Add{name ? ` '${name}' ` : ' '}as new project</button>
+    </>)}
+    {props.editType === 'edit' && (<>
+    {interpretFields(input,model)}
+    <button className="">Edit</button>
+    <button className="" onClick={setEditing}>Cancel</button>
+    </>)    
+    }
   </div>)
 }
 
@@ -254,7 +282,7 @@ function Projects(props) {
     {/* <ul className='project-list'>    
     {projects && projects.map(project =><li key={project.uid} className='project-list-item' onClick={()=>props._setProject(project)}><h3>{project.name}</h3></li>)    }
     </ul> */}
-    <button onClick={() => props._setEdit(()=>!props.edit)} className='project-button'>Add Project+</button>
+    <button onClick={()=>props._setAdd()} className='project-button'>Add Project+</button>
   </>)
 }
 

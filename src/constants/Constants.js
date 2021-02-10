@@ -1,0 +1,1 @@
+export const projectModel = [{name:'name',type:'text'},{name:'wordcount',type:'number'},{name:'description',type:'text'},{name:'created',type:'date'}]
