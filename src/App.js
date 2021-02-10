@@ -10,7 +10,10 @@ import { useCollectionData } from 'react-firebase-hooks/firestore'
 
 import { Title } from './components/Title'
 import { AddWordCount } from './components/AddWordCount'
-import { Select } from './components/Select'
+import { Projects } from './components/Projects'
+import { WordCountList } from './components/WordCountList'
+import { GoalList } from './components/GoalList'
+import { EditForm } from './components/EditForm'
 
 import { _formatTime as formatTime, _formatDate as formatDate, _interpretFields as interpretFields } from './utils/Utils.js'
 import { projectModel } from './constants/Constants'
@@ -162,161 +165,6 @@ function App() {
         </div> 
     </div>
   );
-}
-
-//Class Functions
-
-//Form
-function EditForm(props){
-  const [project,setProject] = useState(props.project)
-  const [name,setName] = useState()
-  const [description,setDescription] = useState()
-  const [type,setType] = useState('new')
-  const [wordcount,setWordcount] = useState(0)
-  //const fields = [{type:'text',name:'Title',value:'Test Project'},{type:'number',name:'Count',value:150}]
-  
-  // const puppetFields = (fields) => {
-  //   return fields.map(field => {
-  //       return(<label htmlFor={field.name}>{field.name}
-  //       <input type={field.type} name={field.name} value={field.value}/></label>
-  //   )})
-  // }
-
-  const input = props.input, model = props.model
-  
-  const handleNameChange = input => {
-    setName(()=>input)
-    project.name = input
-    setProject(()=>project)
-  }
-  const handleDescChange = input => {
-    setDescription(()=>input)
-    project.description = input
-    setProject(()=>project)
-
-  }
-  const handleWCChange = input => {
-    setWordcount(()=>input)
-    project.wordcount = input
-    setProject(()=>project)
-  }
-
-  const setEditing = () => {
-    console.log('Cancel editing')
-    props._setEditing(()=>!props.editing)
-  }
-
-  return (
-  <div className='entry-form'>
-    {props.editType}
-    {props.editType === 'add' && (    
-    <>
-    <input className="entry" type="text" name="name" placeholder="Add a descriptive name" value={name} onChange={(e) => handleNameChange(e.target.value)} />
-    <input className="entry" type="textbox" name="description" placeholder="Add description" value={description} onChange={(e) => handleDescChange(e.target.value)} />
-    
-    <div className="entry-radio-group">
-      <label htmlFor="new-project">
-        <input type="radio" onClick={()=>setType('new')} name="new-project" value='new' checked={type==='new'}/>New Project
-      </label>
-      <label htmlFor="old-project">
-        <input type="radio" onClick={()=>setType('old')} name="old-project" value='old' checked={type==='old'} />Existing Project
-      </label>
-    </div>
-    {type === 'old' && (<input className="entry" type="number" name="wordcount" placeholder="Add a wordcount (if not starting a new project)" value={wordcount} onChange={(e) => handleWCChange(e.target.value)} />)}
-    <button className="entry" onClick={()=>props._addProject(project)}>Add{name ? ` '${name}' ` : ' '}as new project</button>
-    </>)}
-    {props.editType === 'edit' && (<>
-    {interpretFields(input,model)}
-    <button className="">Edit</button>
-    <button className="" onClick={setEditing}>Cancel</button>
-    </>)    
-    }
-  </div>)
-}
-
-//Projects
-function Projects(props) {    
-  const projectRef = firestore.collection(`users/${auth.currentUser.uid}/projects`)  
-  const query = projectRef.orderBy('name')
-  const [projects] = useCollectionData(query,{idField: 'id'})
-
-  const setProject = (input) => {
-    //setValue(()=>input)
-    props._setProject(input)
-  }
-
-  return (<>
-    <h1>Projects</h1>
-    <Select 
-      name="Projects" 
-      options={projects} 
-      placeholder="Select Project" 
-      _onChange={setProject}      
-      />
-
-    {/* <ul className='project-list'>    
-    {projects && projects.map(project =><li key={project.uid} className='project-list-item' onClick={()=>props._setProject(project)}><h3>{project.name}</h3></li>)    }
-    </ul> */}
-    <button onClick={()=>props._setAdd()} className='project-button'>Add Project+</button>
-  </>)
-}
-
-//Wordcount
-function WordCountList(props) {  
-  const wcRef = firestore.collection(`users/${auth.currentUser.uid}/projects/${props.currentProject.id}/wordcount`)
-  const query = wcRef.orderBy('timestamp','asc').limit(20)
-  const [wordcounts] = useCollectionData(query, {idField: 'id'})
-
-  return (
-    <>
-    <h3 className="count-list_h3">Word Count History</h3>
-    {wordcounts && wordcounts.map(wc => <WordCount key={wc.uid} wordcount={wc}/>)}
-    </>
-  )
-  function WordCount(props) {
-    const {count,timestamp} = props.wordcount
-    const date = timestamp.toDate().toLocaleDateString()
-    const time = timestamp.toDate().toLocaleTimeString()
-    return (<div className='wc-history-item'>  
-    <h3 className='wc-history-item-count'>Count: {count}</h3>
-    <p className='wc-history-item-time'>Added on {date} at {time}</p>
-    </div>)
-  }
-}
-
-//Goals
-function GoalList(props) {  
-  const goalRef = firestore.collection(`users/${auth.currentUser.uid}/projects/${props.currentProject.id}/goals`)
-  const query = goalRef.where('active','==',true).limit(3)
-  const [goals] = useCollectionData(query, {idField: 'id'})
-
-  return (
-    <div className='goal-panel'>
-    <h3>Goals</h3>
-    {(!goals || (goals && goals.length === 0)) && (<p>No goal currently set.</p>)}
-    {goals && goals.map(goal => <Goal key={goal.uid} goal={goal}/>)}
-    <button>Add a Goal+</button>
-    </div>    
-  )
-  function Goal(props) {
-    const {count,timestamp,type,repeat,start,end} = props.goal
-    const date = timestamp.toDate().toLocaleDateString()
-    const time = timestamp.toDate().toLocaleTimeString()
-    const _start = start.toDate().toLocaleDateString()
-    const _end = end.toDate().toLocaleDateString()
-    return (<div className='goal-item'>  
-    <h3 className='goal-count'>Goal: {count} words</h3>
-    { type === 'fixed' && (<>
-      <p className='goal-fixed'>By {_end}</p>
-      <p className='goal-added'>Added on {date} at {time}</p>
-    </>)}
-    { type === 'recurring' && (<>
-      <p className='goal-repeat'>Per {repeat}</p>
-      <p className='goal-repeat'>From {_start} to {_end}</p>
-      <p className='goal-added'>Added on {date} at {time}</p>
-    </>)}
-    </div>)
-  }
 }
 
 export default App;
