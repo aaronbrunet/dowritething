@@ -2,11 +2,10 @@ import { React,useState } from 'react'
 import './App.css';
 
 //firebase
-import firebase, { auth, provider, firestore } from './firebase.js'
+import firebase, { auth, firestore } from './firebase.js'
 
 //hooks
 import { useAuthState } from 'react-firebase-hooks/auth'
-import { useCollectionData } from 'react-firebase-hooks/firestore'
 
 import { Title } from './components/Title'
 import { AddWordCount } from './components/AddWordCount'

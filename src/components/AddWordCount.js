@@ -30,7 +30,8 @@ export const AddWordCount = props => {
 
     return (
         <>
-        <input className="entry" type="number" name="new_count" placeholder="Add new wordcount" value={newCount} onChange={(e) => handleInputChange(e.target.value)} />
+        <input className="entry" type="number" name="count" placeholder="Add new wordcount" value={newCount} onChange={(e) => handleInputChange(e.target.value)} />
+        <input className="entry" type="date" name="date" placeholder="When was this written?"/>
         <button onClick={() => handleClick()}>Add Word Count+</button>
         </>
     )
