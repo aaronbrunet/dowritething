@@ -84,7 +84,7 @@ function App() {
    //const projectRef = firestore.collection('projects')
        projectRef.add({
             wordcount: project.wordcount,
-            timestamp: now,
+            timestamp: project.timestamp,
             name: project.name,
             description: project.description,
             owner: 'users/'+auth.currentUser.uid,
@@ -97,7 +97,7 @@ function App() {
               //const wcRef = doc.collection('wordcount')
               wcRef.add({
                   count: parseInt(current.wordcount),
-                  timestamp: firebase.firestore.Timestamp.now()
+                  timestamp: project.timestamp
               }).then(function(){
                   console.log('New count added!')
                   setCurrentProject(()=>current)

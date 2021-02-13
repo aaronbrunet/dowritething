@@ -40,6 +40,12 @@ export const EditForm = (props) => {
       setStartDate(()=>new Date())    
     }
 
+    const handleSubmit = () => {
+      project.timestamp = startDate
+      console.log(project)
+      props._addProject(project)
+    }
+
     return (
     <div className='entry-form'>
       {props.editType === 'add' && (    
@@ -63,7 +69,7 @@ export const EditForm = (props) => {
         </label>
       </div>
       {type === 'old' && (<input className="entry" type="number" name="wordcount" placeholder="Add a wordcount (if not starting a new project)" value={wordcount} onChange={(e) => handleWCChange(e.target.value)} />)}
-      <button className="entry" onClick={()=>props._addProject(project)}>Add{name ? ` '${name}' ` : ' '}as new project</button>
+      <button className="entry" onClick={handleSubmit}>Add{name ? ` '${name}' ` : ' '}as new project</button>
       </>)}
       {props.editType === 'edit' && (<>
       {interpretFields(input,model,flag)}
