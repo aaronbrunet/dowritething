@@ -17,7 +17,7 @@ export const AddWordCount = (props) => {
         const wcRef = firestore.collection(`users/${props.currentUser.uid}/projects/${props.currentProject.id}/wordcount`)
         wcRef.add({
             count: parseInt(newCount),
-            timestamp: firebase.firestore.Timestamp.now()
+            timestamp: startDate//firebase.firestore.Timestamp.now()
         }).then(function(){
             console.log('New count added!')
           }).catch(function(error) {
@@ -30,7 +30,8 @@ export const AddWordCount = (props) => {
     }
 
     const handleClick = () => {
-        newCount !== 0 && AddCount(newCount)        
+        newCount !== 0 && AddCount(newCount) 
+        setStartDate(()=>new Date())       
     }
 
     return (

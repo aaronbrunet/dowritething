@@ -42,7 +42,7 @@ export const _interpretFields = (input,model,flag) => {
                     onChange={()=> handleChange}
                     showTimeInput     
                     dateFormat="MM/dd/yyyy h:mm aa" 
-                    disabled={flag==='project'}
+                    disabled={flag==='edit'}
                 />}
             </label></>)
         } 

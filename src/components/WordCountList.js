@@ -7,10 +7,12 @@ export const WordCountList = (props) => {
     const [wordcounts] = useCollectionData(query, {idField: 'id'})
   
     return (
-      <>
+      <div>
       <h3 className="count-list_h3">Word Count History</h3>
-      {wordcounts && wordcounts.map(wc => <WordCount key={wc.uid} wordcount={wc}/>)}
-      </>
+      <div className='count-list-container'>
+        {wordcounts && wordcounts.map(wc => <WordCount key={wc.uid} wordcount={wc}/>)}
+        </div>
+      </div>
     )
     function WordCount(props) {
       const {count,timestamp} = props.wordcount

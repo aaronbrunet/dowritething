@@ -26,6 +26,6 @@ export const Projects = (props) => {
       {/* <ul className='project-list'>    
       {projects && projects.map(project =><li key={project.uid} className='project-list-item' onClick={()=>props._setProject(project)}><h3>{project.name}</h3></li>)    }
       </ul> */}
-      <button onClick={()=>props._setAdd()} className='project-button'>Add Project+</button>
+      <button onClick={()=>props._setAdd('add')} className='project-button'>Add Project+</button>
     </>)
   }

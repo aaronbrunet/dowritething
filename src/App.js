@@ -26,6 +26,7 @@ function App() {
   const [totalCount,setTotalCount] = useState(0)
   const [editing,setEditing] = useState(false)
   const [editType,setEditType] = useState('add')
+  const [flag,setFlag] = useState('')
   const [user] = useAuthState(auth)
   const userRef = user ? firestore.collection('users').doc(auth.currentUser.uid) : null
 
@@ -35,13 +36,15 @@ function App() {
     description: ''
   }
 
-  const setEdit = () => {
+  const setEdit = (flag) => {
     //editType === 'edit' ? setEditType('') : setEditType('edit')
     setEditType('edit')
+    setFlag(flag)
     setEditing(()=>!editing)    
   }
-  const setAdd = () => {
+  const setAdd = (flag) => {
     setEditType('add')
+    setFlag(flag)
     setEditing(()=>!editing)
    // editType === 'add' ? setEditType('') : setEditType('add')
   }
@@ -135,7 +138,7 @@ function App() {
           <div id='project-view' className='right'>
               {currentProject && !editing &&(<>
               <div className='left-inner'>
-                <h1>{currentProject.name}</h1><button onClick={()=>setEdit()}>Edit</button>
+                <h1>{currentProject.name}</h1><button onClick={()=>setEdit('edit')}>Edit</button>
                 <p className='description'>{currentProject.description}</p>
                 <h3 className="count_h3">Word Count: { currentProject.wordcount }</h3>
                 <h4>Last Updated: {currentProject.revised && formatTime(currentProject.revised)}</h4>          
@@ -149,7 +152,7 @@ function App() {
               { editing && <EditForm editType={editType} 
                                       input={currentProject} 
                                       model={projectModel}
-                                      flag='project' 
+                                      flag={flag} 
                                       project={dummyProject} 
                                       _addProject={_addProject}
                                       _setEditing={setEditing}
