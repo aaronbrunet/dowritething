@@ -81,7 +81,7 @@ function App() {
    //const projectRef = firestore.collection('projects')
        projectRef.add({
             wordcount: project.wordcount,
-            created: now,
+            timestamp: now,
             name: project.name,
             description: project.description,
             owner: 'users/'+auth.currentUser.uid,
@@ -148,7 +148,8 @@ function App() {
               </>)}
               { editing && <EditForm editType={editType} 
                                       input={currentProject} 
-                                      model={projectModel} 
+                                      model={projectModel}
+                                      flag='project' 
                                       project={dummyProject} 
                                       _addProject={_addProject}
                                       _setEditing={setEditing}

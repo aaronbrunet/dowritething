@@ -7,16 +7,8 @@ export const EditForm = (props) => {
     const [description,setDescription] = useState()
     const [type,setType] = useState('new')
     const [wordcount,setWordcount] = useState(0)
-    //const fields = [{type:'text',name:'Title',value:'Test Project'},{type:'number',name:'Count',value:150}]
     
-    // const puppetFields = (fields) => {
-    //   return fields.map(field => {
-    //       return(<label htmlFor={field.name}>{field.name}
-    //       <input type={field.type} name={field.name} value={field.value}/></label>
-    //   )})
-    // }
-  
-    const input = props.input, model = props.model
+    const input = props.input, model = props.model, flag = props.flag
     
     const handleNameChange = input => {
       setName(()=>input)
@@ -59,7 +51,7 @@ export const EditForm = (props) => {
       <button className="entry" onClick={()=>props._addProject(project)}>Add{name ? ` '${name}' ` : ' '}as new project</button>
       </>)}
       {props.editType === 'edit' && (<>
-      {interpretFields(input,model)}
+      {interpretFields(input,model,flag)}
       <button className="">Edit</button>
       <button className="" onClick={setEditing}>Cancel</button>
       </>)    

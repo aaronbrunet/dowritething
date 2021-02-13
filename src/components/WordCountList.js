@@ -16,7 +16,7 @@ export const WordCountList = (props) => {
       const {count,timestamp} = props.wordcount
       const date = timestamp.toDate().toLocaleDateString()
       const time = timestamp.toDate().toLocaleTimeString()
-      return (<div className='wc-history-item'>  
+      return (<div key={props.key} className='wc-history-item'>  
       <h3 className='wc-history-item-count'>Count: {count}</h3>
       <p className='wc-history-item-time'>Added on {date} at {time}</p>
       </div>)

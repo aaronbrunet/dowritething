@@ -1,8 +1,13 @@
 import React, { useState } from 'react'
 import firebase, { firestore } from '../firebase.js'
+import DatePicker from 'react-datepicker'
+import "react-datepicker/dist/react-datepicker.css";
 
-export const AddWordCount = props => {
+
+
+export const AddWordCount = (props) => {
     const [newCount,setNewCount] = useState(0)
+    const [startDate, setStartDate] = useState(new Date());
 
     const AddCount = newCount => {        
         //let result = parseInt(props.count) + parseInt(newCount)
@@ -31,7 +36,14 @@ export const AddWordCount = props => {
     return (
         <>
         <input className="entry" type="number" name="count" placeholder="Add new wordcount" value={newCount} onChange={(e) => handleInputChange(e.target.value)} />
-        <input className="entry" type="date" name="date" placeholder="When was this written?"/>
+        {/* <input className="entry" type="date" name="date" placeholder="When was this written?"/> */}
+        <DatePicker
+            selected={startDate}
+            onChange={(date) => setStartDate(date)}
+            showTimeInput     
+            dateFormat="MM/dd/yyyy h:mm aa"   
+            withPortal  
+        />
         <button onClick={() => handleClick()}>Add Word Count+</button>
         </>
     )
