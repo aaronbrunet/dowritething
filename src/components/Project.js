@@ -10,6 +10,8 @@ export const Project = (props) => {
     const { currentProject, currentUser, setEdit } = props
 
     const [value,loading,error] = useDocument(firestore.doc(`users/${currentUser.uid}/projects/${currentProject.id}`))
+    let project
+    value ? project = value.data() : project = null
     //console.log(JSON.stringify(value.data()))
     
     return (
@@ -20,10 +22,11 @@ export const Project = (props) => {
         {value &&         
             (<>
             <div className='left-inner'>
-                <h1>{value.data().name}</h1><button onClick={()=>setEdit('edit')}>Edit</button>
-                <p className='description'>{value.data().description}</p>
-                <h3 className="count_h3">Word Count: { value.data().wordcount }</h3>
-                <h4>Last Updated: {value.data().revised && formatTime(value.data().revised)}</h4>          
+                <h1>{project.name}</h1><button onClick={()=>setEdit('edit')}>Edit</button>
+                {project.default && <p>Default</p>}
+                <p className='description'>{project.description}</p>
+                <h3 className="count_h3">Word Count: { project.wordcount }</h3>
+                <h4>Last Updated: {project.revised && formatTime(project.revised)}</h4>          
               </div>            
               <div className='right-inner'>   
                 <GoalList currentProject={value}/>
