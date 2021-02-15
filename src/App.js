@@ -10,7 +10,7 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { Title } from './components/Title'
 import { AddWordCount } from './components/AddWordCount'
 import { Projects } from './components/Projects'
-import { WordCountList } from './components/WordCountList'
+import { WordCount } from './components/WordCount'
 import { GoalList } from './components/GoalList'
 import { EditForm } from './components/EditForm'
 
@@ -142,11 +142,10 @@ function App() {
                 <p className='description'>{currentProject.description}</p>
                 <h3 className="count_h3">Word Count: { currentProject.wordcount }</h3>
                 <h4>Last Updated: {currentProject.revised && formatTime(currentProject.revised)}</h4>          
-                <AddWordCount currentUser={user} currentProject={currentProject} count={count} _setCount={_update} />          
               </div>            
               <div className='right-inner'>   
                 <GoalList currentProject={currentProject}/>
-                <WordCountList currentProject={currentProject}/>
+                <WordCount currentProject={currentProject} currentUser={user}/>
               </div>
               </>)}
               { editing && <EditForm editType={editType} 
