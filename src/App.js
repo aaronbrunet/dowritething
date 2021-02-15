@@ -8,7 +8,6 @@ import firebase, { auth, firestore } from './firebase/firebase.js'
 import { useAuthState } from 'react-firebase-hooks/auth'
 
 import { Title } from './components/Title'
-import { AddWordCount } from './components/AddWordCount'
 import { Projects } from './components/Projects'
 import { WordCount } from './components/WordCount'
 import { GoalList } from './components/GoalList'
@@ -20,10 +19,7 @@ import { projectModel } from './globals/Constants'
 import { SignIn, SignOut } from './security/Security'
 
 function App() {
-  const [count,setCount] = useState(0)  
-  const [lastUpdate,setLastUpdate] = useState('Never')
   const [currentProject,setCurrentProject] = useState(null)
-  const [totalCount,setTotalCount] = useState(0)
   const [editing,setEditing] = useState(false)
   const [editType,setEditType] = useState('add')
   const [flag,setFlag] = useState('')
@@ -50,30 +46,8 @@ function App() {
   }
   const _setProject = (project) => {
     project && setCurrentProject(project)  
-    project && setTotalCount(project.wordcount)  
     console.log('Set project')
     //console.log(`${nowDate} ${nowTime}`)
-  }
-
-  const _update = newCount => {
-    setCount(newCount)
-    console.log(newCount)
-    if(count < 0){setCount(0)}
-    let result = parseInt(currentProject.wordcount) + parseInt(newCount)
-    setTotalCount(result)
-    console.log(result)
-    var timestamp = firebase.firestore.Timestamp.now()
-    var formattedTime = formatTime(timestamp)
-    setLastUpdate(()=>formattedTime)
-    console.log(lastUpdate)
-    firestore.collection(`users/${auth.currentUser.uid}/projects`).doc(currentProject.id).update({
-      wordcount: result,
-      revised: timestamp
-    }).then(function(){
-      console.log('Time and count updated!')
-    }).catch(function(error) {
-      console.error('Error writing to document: '+error)
-    })
   }
   
   const _addProject = (project) => {
