@@ -1,4 +1,4 @@
-import { auth, firestore } from '../firebase.js'
+import { auth, firestore } from '../firebase/firebase.js'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
 
 export const GoalList = (props) => {  
@@ -24,6 +24,7 @@ export const GoalList = (props) => {
       <h3 className='goal-count'>Goal: {count} words</h3>
       { type === 'fixed' && (<>
         <p className='goal-fixed'>By {_end}</p>
+        <p className='goal-fixed'>Starting on {_start}</p>
         <p className='goal-added'>Added on {date} at {time}</p>
       </>)}
       { type === 'recurring' && (<>

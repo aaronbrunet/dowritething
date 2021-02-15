@@ -2,7 +2,7 @@ import { React,useState } from 'react'
 import './App.css';
 
 //firebase
-import firebase, { auth, firestore } from './firebase.js'
+import firebase, { auth, firestore } from './firebase/firebase.js'
 
 //hooks
 import { useAuthState } from 'react-firebase-hooks/auth'
@@ -15,7 +15,7 @@ import { GoalList } from './components/GoalList'
 import { EditForm } from './components/EditForm'
 
 import { _formatTime as formatTime, _formatDate as formatDate, _interpretFields as interpretFields } from './utils/Utils.js'
-import { projectModel } from './constants/Constants'
+import { projectModel } from './globals/Constants'
 
 import { SignIn, SignOut } from './security/Security'
 

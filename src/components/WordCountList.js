@@ -1,4 +1,4 @@
-import { auth, firestore } from '../firebase.js'
+import { auth, firestore } from '../firebase/firebase.js'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
 
 export const WordCountList = (props) => {  

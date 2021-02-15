@@ -1,4 +1,4 @@
-import firebase, { auth, provider, firestore } from '../firebase.js'
+import firebase, { auth, provider, firestore } from '../firebase/firebase.js'
 
 //Auth
 export function SignIn() {

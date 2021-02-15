@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import firebase, { firestore } from '../firebase.js'
+import firebase, { firestore } from '../firebase/firebase.js'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
 
