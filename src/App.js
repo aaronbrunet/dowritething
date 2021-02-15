@@ -8,7 +8,8 @@ import firebase, { auth, firestore } from './firebase/firebase.js'
 import { useAuthState } from 'react-firebase-hooks/auth'
 
 import { Title } from './components/Title'
-import { Projects } from './components/Projects'
+import { ProjectSelect } from './components/ProjectSelect'
+import { Project } from './components/Project'
 import { WordCount } from './components/WordCount'
 import { GoalList } from './components/GoalList'
 import { EditForm } from './components/EditForm'
@@ -98,9 +99,8 @@ function App() {
       </header> 
         <div id="main">
           {user ? <>
-          <div id='project-select' className='left'>
-            
-            <Projects 
+          <div id='project-select' className='left'>            
+            <ProjectSelect 
               _setProject={_setProject} 
               _addProject={_addProject} 
               _userRef={userRef}
@@ -111,7 +111,8 @@ function App() {
           </div>
           <div id='project-view' className='right'>
               {currentProject && !editing &&(<>
-              <div className='left-inner'>
+              <Project currentProject={currentProject} currentUser={user} setEdit={setEdit}/>
+              {/* <div className='left-inner'>
                 <h1>{currentProject.name}</h1><button onClick={()=>setEdit('edit')}>Edit</button>
                 <p className='description'>{currentProject.description}</p>
                 <h3 className="count_h3">Word Count: { currentProject.wordcount }</h3>
@@ -120,7 +121,7 @@ function App() {
               <div className='right-inner'>   
                 <GoalList currentProject={currentProject}/>
                 <WordCount currentProject={currentProject} currentUser={user}/>
-              </div>
+              </div> */}
               </>)}
               { editing && <EditForm editType={editType} 
                                       input={currentProject} 

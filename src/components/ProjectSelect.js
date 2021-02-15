@@ -4,7 +4,7 @@ import { useCollectionData } from 'react-firebase-hooks/firestore'
 
 import { Select } from './Select'
 
-export const Projects = (props) => {    
+export const ProjectSelect = (props) => {    
     const projectRef = firestore.collection(`users/${auth.currentUser.uid}/projects`)  
     const query = projectRef.orderBy('name')
     const [projects] = useCollectionData(query,{idField: 'id'})

@@ -58,7 +58,7 @@ export const WordCount = (props) => {
         setNewCount(newCount)
         console.log(newCount)
         if(newCount < 0){setNewCount(0)}
-        let result = parseInt(currentProject.wordcount) + parseInt(newCount)
+        let result = parseInt(currentProject.data().wordcount) + parseInt(newCount)
         //setTotalCount(result)
         console.log(result)
         var timestamp = firebase.firestore.Timestamp.now()
