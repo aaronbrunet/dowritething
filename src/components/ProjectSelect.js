@@ -15,7 +15,7 @@ export const ProjectSelect = (props) => {
     }
   
     return (<>
-      <h1>Projects</h1>
+      {/* <h1>Projects</h1> */}
       <Select 
         name="Projects" 
         options={projects} 

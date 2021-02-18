@@ -3,7 +3,7 @@ import { React,useState } from 'react'
 import "tailwindcss/tailwind.css"
 
 //firebase
-import firebase, { auth, provider, firestore } from './firebase/firebase.js'
+import firebase, { auth, firestore } from './firebase/firebase.js'
 
 //hooks
 import { useAuthState } from 'react-firebase-hooks/auth'
@@ -93,13 +93,11 @@ function App() {
   }
 
   return (
-    <div className="App"> 
-    <div>{auth.currentUser}     </div>
-    <Nav user={user} />
-      {user != null ? <>
-         
-          <div id="main" className="container mx-auto">
-            <div id='project-select' className='left'>            
+    <div className="App">     
+      {user ? <>
+        <Nav user={user} />     
+        <div id="main" className="container px-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8">
+            <div id='project-select' className='left m-2'>            
               <ProjectSelect 
                 _setProject={_setProject} 
                 _addProject={_addProject} 
@@ -139,43 +137,11 @@ function App() {
           :
             <div className="p-40 container mx-auto block font-title text-center">
               <h1 className="text-spring-wood-900 font-bold text-4xl m-4">Do The Write Thing.</h1>
-              <TrySignIn />
+              <SignIn override="Get Started"/>
             </div>
           }        
     </div>
   );
-}
-
-function TrySignIn() {
-  const signInAuth = () => {  
-    console.log(auth.currentUser)
-    console.log('attempting signin')    
-      auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).then(async function(){  
-        console.log('Signed in!')        
-        const userRef = firestore.collection('users').doc(auth.currentUser.uid)
-        await userRef.set({
-          name: auth.currentUser.displayName,
-          lastLogin: firebase.firestore.Timestamp.now(),
-          id: auth.currentUser.uid
-        }, { merge: true})
-        
-      }).catch(function(error) {
-        console.error('Error logging in: '+error)
-      })
-      
-  }  
-  return (   
-    <a
-    href="/"
-    className="inline-flex items-center justify-center h-12 px-6 font-medium tracking-wide text-white transition duration-200 rounded shadow-md bg-spring-wood-600 hover:bg-spring-wood-800 focus:shadow-outline focus:outline-none"
-    aria-label="Sign up"
-    title="Sign up"
-    onClick={signInAuth}
-  >
-    {/* {props.override ? `${props.override}` : `Sign In`} */}
-    Sign In
-    </a>
-  )
 }
 
 export default App;
