@@ -3,7 +3,7 @@ import { React,useState } from 'react'
 import "tailwindcss/tailwind.css"
 
 //firebase
-import firebase, { auth, firestore } from './firebase/firebase.js'
+import firebase, { auth, provider, firestore } from './firebase/firebase.js'
 
 //hooks
 import { useAuthState } from 'react-firebase-hooks/auth'
@@ -19,7 +19,7 @@ import { EditForm } from './components/EditForm'
 import { _formatTime as formatTime, _formatDate as formatDate, _interpretFields as interpretFields } from './utils/Utils.js'
 import { projectModel } from './globals/Constants'
 
-//import { SignIn, SignOut } from './security/Security'
+import { SignIn, SignOut } from './security/Security'
 
 function App() {
   const [currentProject,setCurrentProject] = useState(null)
@@ -93,53 +93,89 @@ function App() {
   }
 
   return (
-    <div className="App">
-      <Nav user={user} />
-        <div id="main" class="container mx-auto">
-          {user ? <>
-          <div id='project-select' className='left'>            
-            <ProjectSelect 
-              _setProject={_setProject} 
-              _addProject={_addProject} 
-              _userRef={userRef}
-              dummyProject={dummyProject}
-              edit={editing}
-              _setAdd={setAdd}
-              />                    
-          </div>
-          <div id='project-view' className='right'>
-              {currentProject && !editing &&(<>
-              <Project currentProject={currentProject} currentUser={user} setEdit={setEdit}/>
-              {/* <div className='left-inner'>
-                <h1>{currentProject.name}</h1><button onClick={()=>setEdit('edit')}>Edit</button>
-                <p className='description'>{currentProject.description}</p>
-                <h3 className="count_h3">Word Count: { currentProject.wordcount }</h3>
-                <h4>Last Updated: {currentProject.revised && formatTime(currentProject.revised)}</h4>          
-              </div>            
-              <div className='right-inner'>   
-                <GoalList currentProject={currentProject}/>
-                <WordCount currentProject={currentProject} currentUser={user}/>
-              </div> */}
-              </>)}
-              { editing && <EditForm editType={editType} 
-                                      input={currentProject} 
-                                      model={projectModel}
-                                      flag={flag} 
-                                      project={dummyProject} 
-                                      _addProject={_addProject}
-                                      _setEditing={setEditing}
-                                      editing={editing}
-                                      />}
-            
+    <div className="App"> 
+    <div>{auth.currentUser}     </div>
+    <Nav user={user} />
+      {user != null ? <>
+         
+          <div id="main" className="container mx-auto">
+            <div id='project-select' className='left'>            
+              <ProjectSelect 
+                _setProject={_setProject} 
+                _addProject={_addProject} 
+                _userRef={userRef}
+                dummyProject={dummyProject}
+                edit={editing}
+                _setAdd={setAdd}
+                />                    
+            </div>
+            <div id='project-view' className='right'>
+                {currentProject && !editing &&(<>
+                <Project currentProject={currentProject} currentUser={user} setEdit={setEdit}/>
+                {/* <div className='left-inner'>
+                  <h1>{currentProject.name}</h1><button onClick={()=>setEdit('edit')}>Edit</button>
+                  <p className='description'>{currentProject.description}</p>
+                  <h3 className="count_h3">Word Count: { currentProject.wordcount }</h3>
+                  <h4>Last Updated: {currentProject.revised && formatTime(currentProject.revised)}</h4>          
+                </div>            
+                <div className='right-inner'>   
+                  <GoalList currentProject={currentProject}/>
+                  <WordCount currentProject={currentProject} currentUser={user}/>
+                </div> */}
+                </>)}
+                { editing && <EditForm editType={editType} 
+                                        input={currentProject} 
+                                        model={projectModel}
+                                        flag={flag} 
+                                        project={dummyProject} 
+                                        _addProject={_addProject}
+                                        _setEditing={setEditing}
+                                        editing={editing}
+                                        />}
+              
+            </div> 
           </div> 
           </>
           :
-            <h4>Welcome to Do (the) Write Thing</h4>
-          }
-
-        </div> 
+            <div className="p-40 container mx-auto block font-title text-center">
+              <h1 className="text-spring-wood-900 font-bold text-4xl m-4">Do The Write Thing.</h1>
+              <TrySignIn />
+            </div>
+          }        
     </div>
   );
+}
+
+function TrySignIn() {
+  const signInAuth = () => {  
+    console.log(auth.currentUser)
+    console.log('attempting signin')    
+      auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).then(async function(){  
+        console.log('Signed in!')        
+        const userRef = firestore.collection('users').doc(auth.currentUser.uid)
+        await userRef.set({
+          name: auth.currentUser.displayName,
+          lastLogin: firebase.firestore.Timestamp.now(),
+          id: auth.currentUser.uid
+        }, { merge: true})
+        
+      }).catch(function(error) {
+        console.error('Error logging in: '+error)
+      })
+      
+  }  
+  return (   
+    <a
+    href="/"
+    className="inline-flex items-center justify-center h-12 px-6 font-medium tracking-wide text-white transition duration-200 rounded shadow-md bg-spring-wood-600 hover:bg-spring-wood-800 focus:shadow-outline focus:outline-none"
+    aria-label="Sign up"
+    title="Sign up"
+    onClick={signInAuth}
+  >
+    {/* {props.override ? `${props.override}` : `Sign In`} */}
+    Sign In
+    </a>
+  )
 }
 
 export default App;

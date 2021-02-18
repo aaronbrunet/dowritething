@@ -3,7 +3,7 @@ const colors = require('tailwindcss/colors')
 module.exports = {
   purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
   darkMode: false, // or 'media' or 'class'
-  theme: {
+  theme: {    
     colors: {
       transparent: 'transparent',
       current: 'currentColor',
@@ -64,6 +64,12 @@ module.exports = {
     extend: {
       boxShadow: {
       outline: '0 0 0 3px rgba(101, 31, 255, 0.4)',
+      },
+      fontFamily: {
+        'title': ['orpheuspro', 'serif'],
+        'grad':['grad','serif'],
+        'proxima':['proxima-nova','sans-serif']
+
       },
     },
     

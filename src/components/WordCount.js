@@ -14,10 +14,10 @@ export const WordCount = (props) => {
     const { currentUser, currentProject } = props
   
     return (
-      <div class="container shadow-md p-6 m-6 h-full">
-      <h3 class="text-lg">Word Count History</h3>
+      <div className="container shadow-md p-6 m-6 h-full">
+      <h3 className="text-lg">Writing History</h3>
       <AddWordCount />
-      <div class="h-1/2 overflow-y-scroll" className='count-list-container'>
+      <div className="h-1/2 overflow-y-scroll">
         {wordcounts && wordcounts.map(wc => <WordCount key={wc.uid} wordcount={wc}/>)}
         </div>
       </div>
@@ -26,9 +26,9 @@ export const WordCount = (props) => {
       const {count,timestamp} = props.wordcount
       const date = timestamp.toDate().toLocaleDateString()
       const time = timestamp.toDate().toLocaleTimeString()
-      return (<div key={props.key} class="container m-4 mx-auto p-4 shadow-lg rounded">  
-      <h3 className='wc-history-item-count'>Count: {count}</h3>
-      <p class="text-xs text-gray-400">Added on {date} at {time}</p>
+      return (<div key={props.key} className="container m-4 mx-auto p-4 shadow-lg rounded">  
+      <h3 className='wc-history-item-count'>{count} words</h3>
+      <p className="text-xs text-gray-400">Written on {date} at {time}</p>
       </div>)
     }
 
@@ -94,11 +94,11 @@ export const WordCount = (props) => {
                 dateFormat="MM/dd/yyyy h:mm aa"   
                 withPortal  
             />
-            <button class="inline-flex items-center shadow bg-spring-wood-800 text-white text-xs rounded px-4 py-2 hover:text-spring-wood-800 hover:bg-white" onClick={() => handleClick()}>Add+</button>
-            <button class="inline-flex items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:bg-spring-wood-800 hover:text-white" onClick={()=>toggleEdit(()=>!edit)}>Cancel</button>
+            <button className="inline-flex items-center shadow bg-spring-wood-800 text-white text-xs rounded px-4 py-2 hover:text-spring-wood-800 hover:bg-white" onClick={() => handleClick()}>Add+</button>
+            <button className="inline-flex items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:bg-spring-wood-800 hover:text-white" onClick={()=>toggleEdit(()=>!edit)}>Cancel</button>
           </> :
           <> 
-          <button class="inline-flex items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:bg-spring-wood-800 hover:text-white" onClick={()=>toggleEdit(()=>!edit)}>Add Word Count+</button>
+          <button className="inline-flex items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:bg-spring-wood-800 hover:text-white transition duration-300 ease-in-out" onClick={()=>toggleEdit(()=>!edit)}>Update Wordcount+</button>
           </>)
       }
   }

@@ -7,11 +7,11 @@ export const GoalList = (props) => {
     const [goals] = useCollectionData(query, {idField: 'id'})
   
     return (
-      <div class="container shadow-md p-6 m-6">
+      <div className="container shadow-md p-6 m-6">
       <h3>Goals</h3>
       {(!goals || (goals && goals.length === 0)) && (<p>No goal currently set.</p>)}
       {goals && goals.map(goal => <Goal key={goal.uid} goal={goal}/>)}
-      <button class="inline-flex items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:bg-spring-wood-800 hover:text-white">Add a Goal+</button>
+      <button className="inline-flex items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:bg-spring-wood-800 hover:text-white transition duration-300 ease-in-out">Add a Goal+</button>
       </div>    
     )
     function Goal(props) {
