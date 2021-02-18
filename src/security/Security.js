@@ -17,13 +17,29 @@ export function SignIn() {
         })
         
     }  
-    return (    
-      <button onClick={signInAuth}>Sign in</button>
+    return (   
+      <a
+      href="/"
+      class="inline-flex items-center justify-center h-12 px-6 font-medium tracking-wide text-white transition duration-200 rounded shadow-md bg-spring-wood-600 hover:bg-spring-wood-800 focus:shadow-outline focus:outline-none"
+      aria-label="Sign up"
+      title="Sign up"
+      onClick={signInAuth}
+    >
+      Sign In
+      </a>
     )
   }
 
   export function SignOut() {  
     return auth.currentUser && (<>
-      <button onClick={() => auth.signOut()}>Sign out</button>
+    <a
+                href="/"
+                class="inline-flex items-center justify-center h-12 px-6 font-medium tracking-wide text-white transition duration-200 rounded shadow-md bg-spring-wood-600 hover:bg-spring-wood-800 focus:shadow-outline focus:outline-none"
+                aria-label="Sign up"
+                title="Sign up"
+                onClick={() => auth.signOut()}
+              >
+                 Sign Out
+              </a>
     </>)
   }

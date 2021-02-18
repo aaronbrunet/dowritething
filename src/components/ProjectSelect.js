@@ -26,6 +26,6 @@ export const ProjectSelect = (props) => {
       {/* <ul className='project-list'>    
       {projects && projects.map(project =><li key={project.uid} className='project-list-item' onClick={()=>props._setProject(project)}><h3>{project.name}</h3></li>)    }
       </ul> */}
-      <button onClick={()=>props._setAdd('add')} className='project-button'>Add Project+</button>
+      <button onClick={()=>props._setAdd('add')} class="inline-flex items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:bg-spring-wood-800 hover:text-white">Add Project+</button>
     </>)
   }

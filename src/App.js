@@ -1,5 +1,6 @@
 import { React,useState } from 'react'
-import './App.css';
+//import './App.css';
+import "tailwindcss/tailwind.css"
 
 //firebase
 import firebase, { auth, firestore } from './firebase/firebase.js'
@@ -7,6 +8,7 @@ import firebase, { auth, firestore } from './firebase/firebase.js'
 //hooks
 import { useAuthState } from 'react-firebase-hooks/auth'
 
+import { Nav } from './components/Nav'
 import { Title } from './components/Title'
 import { ProjectSelect } from './components/ProjectSelect'
 import { Project } from './components/Project'
@@ -17,7 +19,7 @@ import { EditForm } from './components/EditForm'
 import { _formatTime as formatTime, _formatDate as formatDate, _interpretFields as interpretFields } from './utils/Utils.js'
 import { projectModel } from './globals/Constants'
 
-import { SignIn, SignOut } from './security/Security'
+//import { SignIn, SignOut } from './security/Security'
 
 function App() {
   const [currentProject,setCurrentProject] = useState(null)
@@ -92,12 +94,8 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header">
-      <div className='auth-panel'>{ user ? <><SignOut /> <p className='greeting'>Hi, {auth.currentUser.displayName}</p></>: <SignIn />}</div>
-        <Title />
-        
-      </header> 
-        <div id="main">
+      <Nav user={user} />
+        <div id="main" class="container mx-auto">
           {user ? <>
           <div id='project-select' className='left'>            
             <ProjectSelect 
