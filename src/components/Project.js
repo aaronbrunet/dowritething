@@ -14,6 +14,10 @@ export const Project = (props) => {
     value ? project = value.data() : project = null
     //console.log(JSON.stringify(value.data()))
     
+    function toggleDefault() {
+        
+    }
+
     return (
         <div>
         {error && <strong>Error: {error}</strong>}

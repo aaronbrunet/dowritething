@@ -15,7 +15,7 @@ export const WordCount = (props) => {
   
     return (
       <div className="container shadow-md p-6 m-6 h-full">
-      <h3 className="text-lg">Writing History</h3>
+      <div className="font-medium text-xl m-2 inline-flex">Writing History</div>
       <AddWordCount />
       <div className="h-3/4 overflow-y-scroll">
         {wordcounts && wordcounts.map(wc => <WordCount key={wc.uid} wordcount={wc}/>)}
@@ -85,7 +85,7 @@ export const WordCount = (props) => {
       }
 
       return (edit ? 
-             <>
+             <div className="inline-flex">
             <input className="entry" type="number" name="count" placeholder="Add new wordcount" value={newCount} onChange={(e) => handleInputChange(e.target.value)} />          
             <DatePicker
                 selected={startDate}
@@ -96,7 +96,7 @@ export const WordCount = (props) => {
             />
             <button className="inline-flex items-center shadow bg-spring-wood-800 text-white text-xs rounded px-4 py-2 hover:text-spring-wood-800 hover:bg-white" onClick={() => handleClick()}>Add+</button>
             <button className="inline-flex items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:bg-spring-wood-800 hover:text-white" onClick={()=>toggleEdit(()=>!edit)}>Cancel</button>
-          </> :
+          </div> :
           <> 
           <button className="inline-flex items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:bg-spring-wood-800 hover:text-white transition duration-300 ease-in-out" onClick={()=>toggleEdit(()=>!edit)}>Update Wordcount+</button>
           </>)
