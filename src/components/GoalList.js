@@ -20,7 +20,7 @@ export const GoalList = (props) => {
       const time = timestamp.toDate().toLocaleTimeString()
       const _start = start.toDate().toLocaleDateString()
       const _end = end.toDate().toLocaleDateString()
-      return (<div className='goal-item prose'>  
+      return (<div className='m-2 goal-item prose'>  
       <h4 className='goal-count'>{count} words</h4>
       { type === 'fixed' && (<>
         <p className='goal-fixed'>By {_end} <br/> 
