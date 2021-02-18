@@ -17,7 +17,7 @@ export const WordCount = (props) => {
       <div className="container shadow-md p-6 m-6 h-full">
       <h3 className="text-lg">Writing History</h3>
       <AddWordCount />
-      <div className="h-1/2 overflow-y-scroll">
+      <div className="h-3/4 overflow-y-scroll">
         {wordcounts && wordcounts.map(wc => <WordCount key={wc.uid} wordcount={wc}/>)}
         </div>
       </div>

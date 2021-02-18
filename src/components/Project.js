@@ -20,7 +20,7 @@ export const Project = (props) => {
         {loading && <span>Document: Loading...</span>}
         {/* {value && <span>Document: {JSON.stringify(value.data())}</span>} */}
         {value &&         
-            (<div className="container block p-6 shadow-lg rounded-lg flex justify-between h-full">
+            (<div className="container block p-6 shadow-lg rounded-lg flex justify-between h-screen sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8">
                 <div className="flex flex-col">
                     <div className="inline-flex">
                         <div className="font-medium text-xl mt-4 mr-4">{project.name}</div>                       
