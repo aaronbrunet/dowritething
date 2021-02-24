@@ -4,7 +4,7 @@ import { useCollectionData } from 'react-firebase-hooks/firestore'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
 
-import { _formatTime as formatTime, _formatDate as formatDate, _interpretFields as interpretFields } from '../utils/Utils.js'
+//import { _formatTime as formatTime } from '../utils/Utils.js'
 
 export const WordCount = (props) => {  
     const wcRef = firestore.collection(`users/${auth.currentUser.uid}/projects/${props.currentProject.id}/wordcount`)
@@ -17,7 +17,7 @@ export const WordCount = (props) => {
       <div className="container shadow-md p-6 m-6 h-full">
       <div className="font-medium text-xl m-2 inline-flex">Writing History</div>
       <AddWordCount />
-      <div className="h-3/4 overflow-y-scroll">
+      <div className="h-3/4 overflow-y-auto">
         {wordcounts && wordcounts.map(wc => <WordCount key={wc.uid} wordcount={wc}/>)}
         </div>
       </div>
@@ -62,7 +62,7 @@ export const WordCount = (props) => {
         //setTotalCount(result)
         console.log(result)
         var timestamp = firebase.firestore.Timestamp.now()
-        var formattedTime = formatTime(timestamp)
+        //var formattedTime = formatTime(timestamp)
         //setLastUpdate(()=>formattedTime)
         //console.log(lastUpdate)
         firestore.collection(`users/${currentUser.uid}/projects`).doc(currentProject.id).update({
