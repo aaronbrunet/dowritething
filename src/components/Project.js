@@ -15,7 +15,7 @@ export const Project = (props) => {
         //value ? project.current = value.data() : project.current = null
         if(value){
             var newProject = value.data()
-            newProject.id = value.id
+            newProject.id = currentProject.id
             console.log(newProject)
             setProject(()=> newProject)
         }

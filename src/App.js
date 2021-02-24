@@ -70,7 +70,8 @@ function App() {
             default: false
         }).then(function (docRef){
           docRef.get().then(function(doc){            
-            var current = doc.data()             
+            var current = doc.data()     
+            current.id=doc.id        
             if(current.wordcount > 0) {
               const wcRef = firestore.collection(`users/${auth.currentUser.uid}/projects/${doc.id}/wordcount`)
               //const wcRef = doc.collection('wordcount')
@@ -84,7 +85,7 @@ function App() {
                 }).catch(function(error) {
                   console.error('Error adding new count: '+error)
                 })
-            } else {
+            } else {             
               setCurrentProject(()=>current)
               setDefaultSelection(()=>current)
               
