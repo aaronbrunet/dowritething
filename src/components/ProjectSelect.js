@@ -8,11 +8,21 @@ export const ProjectSelect = (props) => {
     const projectRef = firestore.collection(`users/${auth.currentUser.uid}/projects`)  
     const query = projectRef.orderBy('name')
     const [projects] = useCollectionData(query,{idField: 'id'})
-  
+    var selection
+    if(!props.defaultSelection){
+      if(projects){
+        selection = projects.find(option =>  option.default)
+      }
+    } else {
+      selection = props.defaultSelection
+    }
+    //!props.defaultSelection && projects ?  : findDefault = props.defaultSelection
+
     const setProject = (input) => {
       //setValue(()=>input)
       props._setProject(input)
     }
+
   
     return (<>
       {/* <h1>Projects</h1> */}
@@ -20,7 +30,8 @@ export const ProjectSelect = (props) => {
         name="Projects" 
         options={projects} 
         placeholder="Select Project" 
-        _onChange={setProject}      
+        _onChange={setProject} 
+        selection={selection}     
         />
   
       {/* <ul className='project-list'>    

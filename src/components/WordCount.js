@@ -18,7 +18,7 @@ export const WordCount = (props) => {
       <div className="font-medium text-xl m-2 inline-flex">Writing History</div>
       <AddWordCount />
       <div className="h-3/4 overflow-y-auto">
-        {wordcounts && wordcounts.map(wc => <WordCount key={wc.uid} wordcount={wc}/>)}
+        {wordcounts && wordcounts.map(wc => <WordCount idx={wc.id} wordcount={wc}/>)}
         </div>
       </div>
     )
@@ -26,9 +26,10 @@ export const WordCount = (props) => {
       const {count,timestamp} = props.wordcount
       const date = timestamp.toDate().toLocaleDateString()
       const time = timestamp.toDate().toLocaleTimeString()
-      return (<div key={props.key} className="container m-4 mx-auto p-4 shadow-lg rounded">  
-      <h3 className='wc-history-item-count'>{count} words</h3>
-      <p className="text-xs text-gray-400">Written on {date} at {time}</p>
+      return (
+      <div key={props.idx} className="container m-4 mx-auto p-4 shadow-lg rounded">  
+        <h3 className='wc-history-item-count'>{count} words</h3>
+        <p className="text-xs text-gray-400">Written on {date} at {time}</p>
       </div>)
     }
 

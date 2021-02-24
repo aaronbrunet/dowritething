@@ -23,6 +23,7 @@ import { SignIn } from './security/Security'
 
 function App() {
   const [currentProject,setCurrentProject] = useState(null)
+  const [defaultSelection,setDefaultSelection] = useState(null)
   const [editing,setEditing] = useState(false)
   const [editType,setEditType] = useState('add')
   const [flag,setFlag] = useState('')
@@ -48,7 +49,7 @@ function App() {
    // editType === 'add' ? setEditType('') : setEditType('add')
   }
   const _setProject = (project) => {
-    project && setCurrentProject(project)  
+    project && setCurrentProject(()=>project)  
     console.log('Set project')
     //console.log(`${nowDate} ${nowTime}`)
   }
@@ -65,7 +66,8 @@ function App() {
             name: project.name,
             description: project.description,
             owner: 'users/'+auth.currentUser.uid,
-            revised: now
+            revised: now,
+            default: false
         }).then(function (docRef){
           docRef.get().then(function(doc){            
             var current = doc.data()             
@@ -78,11 +80,14 @@ function App() {
               }).then(function(){
                   console.log('New count added!')
                   setCurrentProject(()=>current)
+                  setDefaultSelection(()=>current)
                 }).catch(function(error) {
                   console.error('Error adding new count: '+error)
                 })
             } else {
               setCurrentProject(()=>current)
+              setDefaultSelection(()=>current)
+              
             }
             setEditing(()=>!editing)
           })
@@ -105,6 +110,7 @@ function App() {
                 dummyProject={dummyProject}
                 edit={editing}
                 _setAdd={setAdd}
+                defaultSelection={defaultSelection}
                 />                    
             </div>
             <div id='project-view' className='right'>
