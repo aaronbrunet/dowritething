@@ -16,10 +16,10 @@ export const Project = (props) => {
         if(value){
             var newProject = value.data()
             newProject.id = currentProject.id
-            console.log(newProject)
+            //console.log(newProject)
             setProject(()=> newProject)
         }
-    },[value])
+    },[value,currentProject])
     //console.log(JSON.stringify(value.data()))
     
     const ToggleDefault = () => {

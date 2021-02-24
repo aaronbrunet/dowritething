@@ -12,6 +12,8 @@ export const ProjectSelect = (props) => {
     if(!props.defaultSelection){
       if(projects){
         selection = projects.find(option =>  option.default)
+      } else {
+        selection = 'default'
       }
     } else {
       selection = props.defaultSelection

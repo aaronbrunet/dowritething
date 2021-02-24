@@ -49,7 +49,7 @@ export const _interpretFields = (input,model,flag) => {
       else {
           value = input[field['name']]          
             arr.push(<>
-                <label key={i} className='entry' htmlFor={field.name}>{label}
+                <label key={i} className='flex flex-row' htmlFor={field.name}>{label}
                 <input type={field.type} name={field.name} value={value}/></label></>)
         }
       

@@ -50,8 +50,8 @@ export const EditForm = (props) => {
     <div className='entry-form'>
       {props.editType === 'add' && (    
       <>
-      <input className="entry" type="text" name="name" placeholder="Add a descriptive name" value={name} onChange={(e) => handleNameChange(e.target.value)} />
-      <input className="entry" type="textbox" name="description" placeholder="Add description" value={description} onChange={(e) => handleDescChange(e.target.value)} />
+      <input className="flex flex-row" type="text" name="name" placeholder="Add a descriptive name" value={name} onChange={(e) => handleNameChange(e.target.value)} />
+      <input className="flex flex-row" type="text" name="description" placeholder="Add description" value={description} onChange={(e) => handleDescChange(e.target.value)} />
       <DatePicker
             selected={startDate}
             onChange={(date) => setStartDate(date)}
@@ -69,12 +69,15 @@ export const EditForm = (props) => {
         </label>
       </div>
       {type === 'old' && (<input className="entry" type="number" name="wordcount" placeholder="Add a wordcount (if not starting a new project)" value={wordcount} onChange={(e) => handleWCChange(e.target.value)} />)}
-      <button className="entry" onClick={handleSubmit}>Add{name ? ` '${name}' ` : ' '}as new project</button>
+      <button className="items-center shadow bg-spring-wood-800 text-white text-xs rounded px-4 py-2 hover:text-spring-wood-800 hover:bg-white" onClick={handleSubmit}>Add{name ? ` '${name}' ` : ' '}as new project</button>
+      <button className="inline-flex items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:white hover:text-spring-wood-800" onClick={setEditing}>Cancel</button>
       </>)}
       {props.editType === 'edit' && (<>
       {interpretFields(input,model,flag)}
-      <button className="">Edit</button>
-      <button className="" onClick={setEditing}>Cancel</button>
+      <div className="flex flex-row">
+        <button className="inline-flex items-center shadow bg-spring-wood-800 text-white text-xs rounded px-4 py-2 hover:text-spring-wood-800 hover:bg-white">Edit</button>
+        <button className="inline-flex items-center shadow bg-spring-wood-800 text-white text-xs rounded px-4 py-2 hover:text-spring-wood-800 hover:bg-white" onClick={setEditing}>Cancel</button>
+      </div>
       </>)    
       }
     </div>)

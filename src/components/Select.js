@@ -8,15 +8,13 @@ export const Select = ( props ) => {
         setSelected(input)
         let index = options.findIndex(option => { return option.id === input })
         _onChange(options[index])
-        //console.log(options[index])
     }    
 
-    const setSelection = () =>{
-        
-    }
-
     useEffect(()=>{
-        if(selection){            
+        if(selection === 'default') {
+            setSelected('default')
+        }
+        else if(selection && selection !==  'default'){            
             let index = options.findIndex(option => { return option.id === selection.id })
             _onChange(options[index])
             setSelected(()=>selection.id)
