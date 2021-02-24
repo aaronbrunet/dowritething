@@ -19,26 +19,26 @@ export function SignIn(props) {
         
     }  
     return (   
-      <a
+      <button
       className="inline-flex items-center justify-center h-12 px-6 font-medium tracking-wide text-white transition duration-200 rounded shadow-md bg-spring-wood-600 hover:bg-spring-wood-800 focus:shadow-outline focus:outline-none"
       aria-label= {props.override ? `${props.override}` : `Sign In`}
       title= {props.override ? `${props.override}` : `Sign In`}
       onClick={signInAuth}
     >
       {props.override ? `${props.override}` : `Sign In`}
-      </a>
+      </button>
     )
   }
 
   export function SignOut() {  
     return auth.currentUser && (<>
-    <a
+    <button
                 className="inline-flex items-center justify-center h-12 px-6 font-medium tracking-wide text-white transition duration-200 rounded shadow-md bg-spring-wood-600 hover:bg-spring-wood-800 focus:shadow-outline focus:outline-none"
-                aria-label="Sign up"
-                title="Sign up"
+                aria-label="Sign out"
+                title="Sign out"
                 onClick={() => auth.signOut()}
               >
                  Sign Out
-              </a>
+              </button>
     </>)
   }
