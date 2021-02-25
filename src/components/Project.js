@@ -50,29 +50,28 @@ export const Project = (props) => {
         {/* {value && <span>Document: {JSON.stringify(value.data())}</span>} */}
         {project &&         
             (<div id='project-container' className="container block p-6 shadow-lg rounded-lg h-screen sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8">
-                <div id='project-top-bar' className="flex flex-row border-solid border-2 border-red">
-                    <div className="flex flex-col  border-solid border-2 border-blue">
-                        <div className="font-large text-xl mt-4 mr-4">{project.name}</div>                       
-                        <button onClick={()=>ToggleDefault()}>
-                        
-                        <svg className="inline-flex mt-2 justify-items-center content-center items-center h-full w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" stroke='currentColor' fill={project.default ? `currentColor` : `none`}>                        
-                        <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
-                        </svg>
-                        
-                        
-                        </button>
-                        <button className="mx-auto mt-4 block w-1/4 text-center content-center items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:bg-spring-wood-800 hover:text-white  transition duration-300 ease-in-out" onClick={()=>setEdit('edit')}>Edit</button>
-                        <p className='description flex flex-row prose'>{project.description}</p>
-                        <p className="flex flex-row prose font-small text-sm">Last updated {project.revised && formatTime(project.revised)}</p>          
+                <div id='project-top-bar' className='flex flex-nowrap flex-row border-solid border-2 border-red'>
+                    <div className="flex flex-col w-1/3 border-solid border-2 border-blue">
+                        <div id='project-title-bar' className='flex flex-row h-auto p-4 m-4'>
+                            <div className="text-4xl flex-col font-bold mt-4 mr-4">{project.name}</div>                       
+                            <button className='flex-col' onClick={()=>ToggleDefault()}>                        
+                                <svg className="mt-2 justify-items-center content-center items-center h-full w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" stroke='currentColor' fill={project.default ? `currentColor` : `none`}>                        
+                                <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
+                                </svg>
+                            </button>
+                            <button className="flex-col h-auto mx-auto mt-4 block w-1/4 text-center content-center items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:bg-spring-wood-800 hover:text-white transition duration-300 ease-in-out" onClick={()=>setEdit('edit')}>Edit</button>
+                        </div>                        
+                        <p className='flex flex-row h-auto prose px-4 mx-4'>{project.description}</p>
+                        <p className='flex flex-row h-auto prose font-small text-sm px-4 mx-4'>Last updated {project.revised && formatTime(project.revised)}</p>          
                     </div>                    
                     
-                    <div id="project-info" className="flex flex-col prose  border-solid border-2 border-green">                    
+                    <div id="project-info" className="flex flex-col w-1/3 prose border-solid border-2 border-green">                    
                     
                     <h3 className="count_h3">{ project.wordcount } total words</h3>
                     
                     </div>
 
-                    <div className="flex flex-col h-full">   
+                    <div className="flex flex-col w-1/3">   
                     <GoalList currentProject={project}/>
                     </div>    
                 </div>            
