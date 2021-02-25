@@ -110,6 +110,7 @@ function App() {
                 _userRef={userRef}
                 dummyProject={dummyProject}
                 edit={editing}
+                _setEdit={setEdit}
                 _setAdd={setAdd}
                 defaultSelection={defaultSelection}
                 />                    

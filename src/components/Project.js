@@ -54,12 +54,11 @@ export const Project = (props) => {
                     <div className="flex flex-col w-1/3 border-solid border-2 border-blue">
                         <div id='project-title-bar' className='flex flex-row h-auto p-4 m-4'>
                             <div className="text-4xl flex-col font-bold mt-4 mr-4">{project.name}</div>                       
-                            <button className='flex-col' onClick={()=>ToggleDefault()}>                        
+                            <button onClick={()=>ToggleDefault()} className='flex-col'>                        
                                 <svg className="mt-2 justify-items-center content-center items-center h-full w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" stroke='currentColor' fill={project.default ? `currentColor` : `none`}>                        
                                 <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
                                 </svg>
-                            </button>
-                            <button className="flex-col h-auto mx-auto mt-4 block w-1/4 text-center content-center items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:bg-spring-wood-800 hover:text-white transition duration-300 ease-in-out" onClick={()=>setEdit('edit')}>Edit</button>
+                            </button>                            
                         </div>                        
                         <p className='flex flex-row h-auto prose px-4 mx-4'>{project.description}</p>
                         <p className='flex flex-row h-auto prose font-small text-sm px-4 mx-4'>Last updated {project.revised && formatTime(project.revised)}</p>          
