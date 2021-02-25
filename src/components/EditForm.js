@@ -82,3 +82,21 @@ export const EditForm = (props) => {
       }
     </div>)
   }
+
+  /*
+props: 
+  type [edit,add,delete]
+  title
+  display [icon,text]
+  icon [pencil,x]
+  
+  isOpen ?
+  <Close Button>
+  <Modal>
+    {children}
+  </Modal>
+  :
+  <Open Button>
+
+
+  */
