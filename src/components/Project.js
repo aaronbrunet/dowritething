@@ -49,10 +49,10 @@ export const Project = (props) => {
         {loading && <span>Document: Loading...</span>}
         {/* {value && <span>Document: {JSON.stringify(value.data())}</span>} */}
         {project &&         
-            (<div className="container block p-6 shadow-lg rounded-lg flex justify-between h-screen sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8">
-                <div className="flex flex-col">
-                    <div className="inline-flex">
-                        <div className="font-medium text-xl mt-4 mr-4">{project.name}</div>                       
+            (<div id='project-container' className="container block p-6 shadow-lg rounded-lg h-screen sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8">
+                <div id='project-top-bar' className="flex flex-row border-solid border-2 border-red">
+                    <div className="flex flex-col  border-solid border-2 border-blue">
+                        <div className="font-large text-xl mt-4 mr-4">{project.name}</div>                       
                         <button onClick={()=>ToggleDefault()}>
                         
                         <svg className="inline-flex mt-2 justify-items-center content-center items-center h-full w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" stroke='currentColor' fill={project.default ? `currentColor` : `none`}>                        
@@ -62,19 +62,22 @@ export const Project = (props) => {
                         
                         </button>
                         <button className="mx-auto mt-4 block w-1/4 text-center content-center items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:bg-spring-wood-800 hover:text-white  transition duration-300 ease-in-out" onClick={()=>setEdit('edit')}>Edit</button>
+                        <p className='description flex flex-row prose'>{project.description}</p>
+                        <p className="flex flex-row prose font-small text-sm">Last updated {project.revised && formatTime(project.revised)}</p>          
                     </div>                    
                     
-                    <div id="project-info" className="prose">                    
-                    <p className='description'>{project.description}</p>
-                    <h3 className="count_h3">{ project.wordcount } total words</h3>
-                    <p className="font-small text-sm">Last updated {project.revised && formatTime(project.revised)}</p>          
-                    </div>
+                    <div id="project-info" className="flex flex-col prose  border-solid border-2 border-green">                    
                     
-                </div>            
-                <div className="flex flex-col h-full">   
-                    <GoalList currentProject={project}/>
+                    <h3 className="count_h3">{ project.wordcount } total words</h3>
+                    
                     </div>
-                <div className="flex flex-col h-full">   
+
+                    <div className="flex flex-col h-full">   
+                    <GoalList currentProject={project}/>
+                    </div>    
+                </div>            
+                
+                <div className="flex flex-row h-full border-solid border-2 border-yellow">   
                     <WordCount currentProject={project} currentUser={currentUser}/>
                 </div>                
             </div>)}
