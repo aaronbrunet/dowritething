@@ -56,6 +56,7 @@ export const WordCount = (props) => {
     }
 
     const handleClick = () => {
+        toggleEdit(()=>!edit)
         newCount !== 0 && addCount(newCount) 
         setStartDate(()=>new Date())       
     }
@@ -75,11 +76,11 @@ export const WordCount = (props) => {
                 dateFormat="MM/dd/yyyy h:mm aa"   
                 withPortal  
             />
-            <button className="inline-flex items-center shadow bg-spring-wood-800 text-white text-xs rounded px-4 py-2 hover:text-spring-wood-800 hover:bg-white" onClick={() => handleClick()}>Add+</button>
-            <button className="inline-flex items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:bg-spring-wood-800 hover:text-white" onClick={()=>toggleEdit(()=>!edit)}>Cancel</button>
+            <button onClick={() => handleClick()} className="inline-flex items-center shadow bg-spring-wood-800 text-white text-xs rounded px-4 py-2 hover:text-spring-wood-800 hover:bg-white">Add+</button>
+            <button onClick={()=>toggleEdit(()=>!edit)} className="inline-flex items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:bg-spring-wood-800 hover:text-white">Cancel</button>
           </div> :
           <> 
-          <button className="inline-flex items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:bg-spring-wood-800 hover:text-white transition duration-300 ease-in-out" onClick={()=>toggleEdit(()=>!edit)}>Update Wordcount+</button>
+          <button onClick={()=>toggleEdit(()=>!edit)} className="inline-flex items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:bg-spring-wood-800 hover:text-white transition duration-300 ease-in-out">Update Wordcount+</button>
           </>}
       <div className="h-3/4 overflow-y-auto">
         {wordcounts && wordcounts.map(wc => <WordCount idx={wc.id} wordcount={wc}/>)}

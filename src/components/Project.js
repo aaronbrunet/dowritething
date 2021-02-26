@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { firestore } from '../firebase/firebase.js'
 import { useDocument, useCollectionData } from 'react-firebase-hooks/firestore'
 
-import { _formatDate as formatDate, _formatTime as formatTime } from '../utils/Utils.js'
+import { _formatDate as formatDate, _formatTime as formatTime, _getSum as getSum } from '../utils/Utils.js'
 import { WordCount } from './WordCount'
 import { GoalList } from './GoalList'
 
@@ -10,6 +10,7 @@ export const Project = (props) => {
     const { currentProject, currentUser, setEdit } = props
     const [value,loading,error] = useDocument(firestore.doc(`users/${currentUser.uid}/projects/${currentProject.id}`))
     const [project,setProject] = useState(currentProject)
+    const [today,getToday] = useState([])
     const projectsRef = firestore.collection(`users/${currentUser.uid}/projects/`)
 
     const wcRef = firestore.collection(`users/${currentUser.uid}/projects/${currentProject.id}/wordcount`)
@@ -50,10 +51,14 @@ export const Project = (props) => {
         })
     }
 
-    const GetTodayCount = (wordcounts) => {
-        var today = wordcounts.filter(wc => formatDate(wc.timestamp)) === formatDate(new Date())
-        return today        
-    }
+    useEffect(() => {
+        if(wordcounts) {                
+            console.log(formatDate(new Date())) 
+            const todayArr = wordcounts.filter(wc => formatDate(wc.timestamp) === formatDate(new Date()))
+            getToday(()=>todayArr)
+
+        }
+    },[wordcounts])   
 
     return (
         <div>
@@ -83,7 +88,8 @@ export const Project = (props) => {
                     </div>
 
                     <div className="flex flex-col h-full justify-center items-center w-1/3 prose">   
-                       <div className='flex flex-row items-center text-xl font-semibold'>0/0 Words Today</div> 
+                       <div className='flex flex-row items-center text-xl font-semibold'>{wordcounts && getSum(today,'count')}/0 words today</div> 
+                       {/* {wordcounts && GetTodayCount(wordcounts)} */}
                     </div>    
                 </div> 
                 <div id='project-container-body' className='flex flex-row h-4/5'>

@@ -18,8 +18,10 @@ export const _formatDate = (timestamp,type) => {
         nowDate = timestamp.toDate().toDateString()
         return nowDate
     default:
-        var d = timestamp.toDate(),
-        month = ''+(d.getMonth()+1),
+        var d = timestamp    
+        !(d instanceof Date) && (d = d.toDate())
+        
+        var month = ''+(d.getMonth()+1),
         day = ''+d.getDate(),
         year = d.getFullYear()
 
@@ -67,3 +69,12 @@ export const _interpretFields = (input,model,flag) => {
     //console.log(arr)
     return arr
   }
+
+  export const _getSum = (array,property) => {
+    if(array.length>1){
+        return array.reduce((a,b)=> a + (b[property] || 0), 0)
+    } else {
+        var a = array[0]
+        return a[property]
+    }
+}
