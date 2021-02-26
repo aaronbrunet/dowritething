@@ -88,15 +88,24 @@ export const WordCount = (props) => {
       </div>
     )
     function RemoveCount (props) {
-      const deleteCount = () => {
-        console.log('deleted!')
+      const {idx,count} = props
+      const delRef = wcRef.doc(idx)
+      const deleteCount = () => {        
+        delRef.delete().then(() => {
+            console.log('deleted '+ idx)  
+            //console.log('New count added!')
+            var delCount = count * -1
+            updateProject(delCount)
+          }).catch(function(error) {
+            console.error('Error deleting count: '+error)
+          })
       }
 
       return(<>
         <p className="flex flex-row">Are you sure?</p>
         <div className="flex flex-row">
-        <button className="inline-flex items-center shadow bg-spring-wood-800 text-white text-xs rounded px-4 py-2 hover:text-spring-wood-800 hover:bg-white" onClick={deleteCount}>Delete</button>
-        <button className="inline-flex items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:bg-spring-wood-800 hover:text-white" onClick={()=>toggleDel(false)}>Cancel</button>
+        <button onClick={deleteCount} className="inline-flex items-center shadow bg-spring-wood-800 text-white text-xs rounded px-4 py-2 hover:text-spring-wood-800 hover:bg-white">Delete</button>
+        <button onClick={()=>toggleDel(false)} className="inline-flex items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:bg-spring-wood-800 hover:text-white">Cancel</button>
         </div>
       </>)
 
@@ -108,10 +117,10 @@ export const WordCount = (props) => {
       return (
       <div key={props.idx} className="container m-4 mx-auto p-4 shadow-lg rounded"> 
         {del === props.idx ?
-        <RemoveCount key={props.idx} />
+        <RemoveCount idx={props.idx} count={count} />
         :<>
         <div className="flex flex-row w-full relative">
-          <button className="inline-flex absolute right-0 object-right" onClick={() => toggleDel(()=>props.idx)}>X</button>
+          <button onClick={() => toggleDel(()=>props.idx)} className="inline-flex absolute right-0 object-right">X</button>
         </div>
         <h3 className='flex flex-row wc-history-item-count'>{count} words</h3>
         <p className="flex flex-row text-xs text-gray-400">Written on {date} at {time}</p>

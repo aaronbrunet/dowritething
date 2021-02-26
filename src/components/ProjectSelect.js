@@ -27,7 +27,7 @@ export const ProjectSelect = (props) => {
   
     return (
     <div id='project-select-container' className='container flex w-full justify-items-center items-center h-12'>
-      <button onClick={()=>toggleOpen(()=>!isOpen)} className='flex flex-col align-middle justify-center mr-4' title='Projects' aria-label='Select Projects'>{isOpen ? '📖':'📕' }</button>
+      <button onClick={()=>toggleOpen(()=>!isOpen)} className='flex flex-col align-middle justify-center mr-4' title='Projects' aria-label='Select Projects'>{isOpen ? '📖':'📚' }</button>
       <span className={isOpen ? 'flex-col items-center w-full' : 'hidden' }>
           <Select 
             name="Projects" 

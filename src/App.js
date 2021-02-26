@@ -116,6 +116,7 @@ function App() {
                 />                    
             </div>
             <div id='project-view' className=''>
+              {!currentProject && 'Loading...'}
                 {currentProject && !editing &&(<>
                 <Project currentProject={currentProject} currentUser={user} setEdit={setEdit}/>                
                 </>)}
