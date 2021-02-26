@@ -117,17 +117,7 @@ function App() {
             </div>
             <div id='project-view' className=''>
                 {currentProject && !editing &&(<>
-                <Project currentProject={currentProject} currentUser={user} setEdit={setEdit}/>
-                {/* <div className='left-inner'>
-                  <h1>{currentProject.name}</h1><button onClick={()=>setEdit('edit')}>Edit</button>
-                  <p className='description'>{currentProject.description}</p>
-                  <h3 className="count_h3">Word Count: { currentProject.wordcount }</h3>
-                  <h4>Last Updated: {currentProject.revised && formatTime(currentProject.revised)}</h4>          
-                </div>            
-                <div className='right-inner'>   
-                  <GoalList currentProject={currentProject}/>
-                  <WordCount currentProject={currentProject} currentUser={user}/>
-                </div> */}
+                <Project currentProject={currentProject} currentUser={user} setEdit={setEdit}/>                
                 </>)}
                 { editing && <EditForm editType={editType} 
                                         input={currentProject} 

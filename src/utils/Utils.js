@@ -74,8 +74,6 @@ export const _interpretFields = (input,model,flag) => {
     if(array.length > 0){
         return array.reduce((a,b)=> a + (b[property] || 0), 0)
     } else {
-        //var a = array[0]
-        //return a[property]
         return 0
     }
 }
