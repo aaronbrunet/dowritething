@@ -72,7 +72,7 @@ export const Project = (props) => {
                     <div id='project-title' className="flex flex-col h-full justify-center align-center items-center text-left px-6 w-1/3">
                         <div id='project-title-bar' className='flex flex-row overflow-hidden w-full h-auto'>
                             <div className="text-4xl text-left flex-col font-bold mr-4">{project.name}</div>                       
-                            <button onClick={()=>ToggleDefault()} className='flex-col'>                        
+                            <button onClick={()=>ToggleDefault()} className='flex-col' aria-label="Set Default" title="Set Default">                        
                                 <svg className="mt-2 justify-items-center content-center items-center h-full w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" stroke='currentColor' fill={project.default ? `currentColor` : `none`}>                        
                                 <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
                                 </svg>
@@ -83,8 +83,9 @@ export const Project = (props) => {
                     </div>                    
                     
                     <div id="project-info" className="flex flex-col h-full justify-center items-center w-1/3 prose">                                        
+                    <div className='flex flex-row items-center text-xl font-semibold'>{today} words today / </div>                        
                         <div className="flex flex-row items-center text-2xl font-semibold">{ project.wordcount } total words</div>                    
-                        <div className="flex flex-row items-center text-sm">{project.timestamp && ('Since ' + formatDate(project.timestamp,'slash'))}</div>                    
+                        {/* <div className="flex flex-row items-center text-sm">{project.timestamp && ('Since ' + formatDate(project.timestamp,'slash'))}</div>                     */}
 
                     </div>
 
