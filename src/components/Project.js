@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { firestore } from '../firebase/firebase.js'
-import { useDocument } from 'react-firebase-hooks/firestore'
+import { useDocument, useCollectionData } from 'react-firebase-hooks/firestore'
 
 import { _formatDate as formatDate, _formatTime as formatTime } from '../utils/Utils.js'
 import { WordCount } from './WordCount'
@@ -11,6 +11,10 @@ export const Project = (props) => {
     const [value,loading,error] = useDocument(firestore.doc(`users/${currentUser.uid}/projects/${currentProject.id}`))
     const [project,setProject] = useState(currentProject)
     const projectsRef = firestore.collection(`users/${currentUser.uid}/projects/`)
+
+    const wcRef = firestore.collection(`users/${currentUser.uid}/projects/${currentProject.id}/wordcount`)
+    const query = wcRef.orderBy('timestamp','asc')//.limit(20)
+    const [wordcounts] = useCollectionData(query, {idField: 'id'})
 
     useEffect(() => {        
         //value ? project.current = value.data() : project.current = null
@@ -46,13 +50,18 @@ export const Project = (props) => {
         })
     }
 
+    const GetTodayCount = (wordcounts) => {
+        var today = wordcounts.filter(wc => formatDate(wc.timestamp)) === formatDate(new Date())
+        return today        
+    }
+
     return (
         <div>
         {error && <strong>Error: {error}</strong>}
         {loading && <span>Document: Loading...</span>}
         {/* {value && <span>Document: {JSON.stringify(value.data())}</span>} */}
         {project &&         
-            (<div id='project-container' className="container block overflow-hidden p-6 shadow-lg rounded-lg h-screen sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8">
+            (<div id='project-container' className="container block bg-white p-6 shadow-lg rounded-lg h-screen sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8">
                 <div id='project-top-bar' className='flex flex-nowrap flex-row h-1/5 border-spring-wood-800'>
                     <div id='project-title' className="flex flex-col h-full justify-center align-center items-center text-left px-6 w-1/3">
                         <div id='project-title-bar' className='flex flex-row overflow-hidden w-full h-auto'>
@@ -77,12 +86,16 @@ export const Project = (props) => {
                        <div className='flex flex-row items-center text-xl font-semibold'>0/0 Words Today</div> 
                     </div>    
                 </div> 
-                <div className="flex flex-row h-1/5">   
-                    <GoalList currentProject={project}/>
-                </div> 
-                <div className="flex flex-row h-3/5">   
-                    <WordCount currentProject={project} currentUser={currentUser}/>
-                </div>                
+                <div id='project-container-body' className='flex flex-row h-4/5'>
+                    <div id='project-container-body-inner-left' className='flex flex-col w-2/3 h-full'>
+                        <div className="flex flex-col h-1/5">   
+                            <GoalList currentProject={project}/>
+                        </div> 
+                    </div>
+                    <div id='project-container-body-inner-right' className="flex flex-col w-1/3 h-full">   
+                        <WordCount currentProject={project} currentUser={currentUser} wordcounts={wordcounts}/>
+                    </div>                
+                </div>
             </div>)}
     </div>
     )

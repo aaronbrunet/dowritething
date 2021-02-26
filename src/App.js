@@ -115,7 +115,7 @@ function App() {
                 defaultSelection={defaultSelection}
                 />                    
             </div>
-            <div id='project-view' className='bg-white'>
+            <div id='project-view' className=''>
                 {currentProject && !editing &&(<>
                 <Project currentProject={currentProject} currentUser={user} setEdit={setEdit}/>
                 {/* <div className='left-inner'>

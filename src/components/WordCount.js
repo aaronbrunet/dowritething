@@ -8,9 +8,10 @@ import "react-datepicker/dist/react-datepicker.css";
 
 export const WordCount = (props) => {  
     const { currentUser, currentProject } = props  
-    const wcRef = firestore.collection(`users/${currentUser.uid}/projects/${currentProject.id}/wordcount`)
-    const query = wcRef.orderBy('timestamp','asc')//.limit(20)
-    const [wordcounts] = useCollectionData(query, {idField: 'id'})
+     const wcRef = firestore.collection(`users/${currentUser.uid}/projects/${currentProject.id}/wordcount`)
+    // const query = wcRef.orderBy('timestamp','asc')//.limit(20)
+    // const [wordcounts] = useCollectionData(query, {idField: 'id'})
+    const wordcounts = props.wordcounts
 
     const [newCount,setNewCount] = useState(0)
     const [edit,toggleEdit] = useState(false)
@@ -61,7 +62,7 @@ export const WordCount = (props) => {
 
 
     return (
-      <div className="container shadow-md p-6 m-6 h-full">
+      <div className="container bg-white w-auto shadow-md p-6 m-6 h-full">
       <div className="font-medium text-xl m-2 inline-flex">Writing History</div>
       {/* <AddWordCount /> */}
       {edit ? 
