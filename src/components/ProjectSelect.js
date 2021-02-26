@@ -9,8 +9,9 @@ export const ProjectSelect = (props) => {
     const projectRef = firestore.collection(`users/${auth.currentUser.uid}/projects`)  
     const query = projectRef.orderBy('name')
     const [projects] = useCollectionData(query,{idField: 'id'})
+    const currentProject = props.currentProject
     var selection
-    if(!props.defaultSelection){
+    if(!props.defaultSelection && !currentProject){
       if(projects){
         selection = projects.find(option =>  option.default)
       } else {

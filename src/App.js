@@ -23,7 +23,7 @@ import { SignIn } from './security/Security'
 
 function App() {
   const [currentProject,setCurrentProject] = useState(null)
-  const [defaultSelection,setDefaultSelection] = useState()
+  const [defaultSelection,setDefaultSelection] = useState(null)
   const [editing,setEditing] = useState(false)
   const [editType,setEditType] = useState('add')
   const [flag,setFlag] = useState('')
@@ -112,6 +112,7 @@ function App() {
                 edit={editing}
                 _setEdit={setEdit}
                 _setAdd={setAdd}
+                currentProject={currentProject}
                 defaultSelection={defaultSelection}
                 />                    
             </div>
