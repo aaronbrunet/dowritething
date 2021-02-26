@@ -10,7 +10,7 @@ export const Project = (props) => {
     const { currentProject, currentUser, setEdit } = props
     const [value,loading,error] = useDocument(firestore.doc(`users/${currentUser.uid}/projects/${currentProject.id}`))
     const [project,setProject] = useState(currentProject)
-    const [today,getToday] = useState()
+    const [today,getToday] = useState(0)
     const projectsRef = firestore.collection(`users/${currentUser.uid}/projects/`)
 
     const wcRef = firestore.collection(`users/${currentUser.uid}/projects/${currentProject.id}/wordcount`)
@@ -89,8 +89,7 @@ export const Project = (props) => {
                     </div>
 
                     <div className="flex flex-col h-full justify-center items-center w-1/3 prose">   
-                       <div className='flex flex-row items-center text-xl font-semibold'>{today}/0 words today</div> 
-                       {wordcounts && getSum(wordcounts,'count')}
+                       <div className='flex flex-row items-center text-xl font-semibold'>{today} words today</div>                        
                     </div>    
                 </div> 
                 <div id='project-container-body' className='flex flex-row h-4/5'>
