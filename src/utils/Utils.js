@@ -71,10 +71,11 @@ export const _interpretFields = (input,model,flag) => {
   }
 
   export const _getSum = (array,property) => {
-    if(array.length>1){
+    if(array.length > 0){
         return array.reduce((a,b)=> a + (b[property] || 0), 0)
     } else {
-        var a = array[0]
-        return a[property]
+        //var a = array[0]
+        //return a[property]
+        return 0
     }
 }
