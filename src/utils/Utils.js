@@ -8,18 +8,28 @@ export const _formatTime = (timestamp) => {
     return `${nowDate} ${nowTime}`
 }
 
-export const _formatDate = (timestamp) => {
-    var d = timestamp.toDate(),
-    month = ''+(d.getMonth()+1),
-    day = ''+d.getDate(),
-    year = d.getFullYear()
+export const _formatDate = (timestamp,type) => {
+    var nowDate
+    switch (type) {
+    case 'slash':
+        nowDate = timestamp.toDate().toLocaleDateString()
+        return nowDate
+    case 'verbose':
+        nowDate = timestamp.toDate().toDateString()
+        return nowDate
+    default:
+        var d = timestamp.toDate(),
+        month = ''+(d.getMonth()+1),
+        day = ''+d.getDate(),
+        year = d.getFullYear()
 
-    if (month.length < 2) 
-        month = '0' + month
-    if (day.length < 2) 
-        day = '0' + day
+        if (month.length < 2) 
+            month = '0' + month
+        if (day.length < 2) 
+            day = '0' + day
 
-    return [year, month, day].join('-')
+        return [year, month, day].join('-')        
+    }
 }
 
 export const _interpretFields = (input,model,flag) => {  

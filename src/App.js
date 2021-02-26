@@ -99,7 +99,7 @@ function App() {
   }
 
   return (
-    <div className="App">     
+    <div className="App bg-spring-wood-400">     
       {user ? <>
         <Nav user={user} />     
         <div id="main" className="container px-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8">
@@ -115,7 +115,7 @@ function App() {
                 defaultSelection={defaultSelection}
                 />                    
             </div>
-            <div id='project-view' className='right'>
+            <div id='project-view' className='bg-white'>
                 {currentProject && !editing &&(<>
                 <Project currentProject={currentProject} currentUser={user} setEdit={setEdit}/>
                 {/* <div className='left-inner'>
