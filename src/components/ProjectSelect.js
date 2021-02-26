@@ -25,10 +25,11 @@ export const ProjectSelect = (props) => {
     }
 
   
-    return (<div id='project-select-container' className='h-full m-2 align-middle content-center'>
-    <button onClick={()=>toggleOpen(()=>!isOpen)} className='inline-flex' title='Projects' aria-label='Select Projects'>{isOpen ? '📖':'📕' }</button>
+    return (
+    <div id='project-select-container' className='container flex w-full justify-items-center items-center h-12'>
+    <button onClick={()=>toggleOpen(()=>!isOpen)} className='flex flex-col align-middle justify-center mr-4' title='Projects' aria-label='Select Projects'>{isOpen ? '📖':'📕' }</button>
     {isOpen && 
-      <div id='project-select' className='inline-flex'>
+      <>
         <Select 
           name="Projects" 
           options={projects} 
@@ -36,8 +37,8 @@ export const ProjectSelect = (props) => {
           _onChange={setProject} 
           selection={selection}     
           />
-        <button onClick={()=>props._setEdit('edit')} className="inline-flex text-center content-center items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:bg-spring-wood-800 hover:text-white transition duration-300 ease-in-out">Edit</button>
-        <button onClick={()=>props._setAdd('add')} className="inline-flex items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:bg-spring-wood-800 hover:text-white  transition duration-300 ease-in-out">Add Project+</button>    
-      </div>}
+        <button onClick={()=>props._setEdit('edit')} className="flex flex-col h-3/4 justify-center align-middle text-center content-center items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:bg-spring-wood-800 hover:text-white transition duration-300 ease-in-out">Edit</button>
+        <button onClick={()=>props._setAdd('add')} className="flex flex-col h-3/4 justify-center align-middle items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:bg-spring-wood-800 hover:text-white  transition duration-300 ease-in-out">Add Project+</button>    
+      </>}
     </div>)
   }
