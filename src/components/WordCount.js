@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import firebase, { auth, firestore } from '../firebase/firebase.js'
-import { useCollectionData } from 'react-firebase-hooks/firestore'
+import firebase, { firestore } from '../firebase/firebase.js'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -64,26 +63,26 @@ export const WordCount = (props) => {
 
     return (
       <div className="container bg-white w-auto shadow-md p-6 m-6 h-full">
-      <div className="font-medium text-xl m-2 inline-flex">Writing History</div>
-      {/* <AddWordCount /> */}
-      {edit ? 
-             <div className="inline-flex">
-            <input className="entry" type="number" name="count" placeholder="Add new wordcount" value={newCount} onChange={(e) => handleInputChange(e.target.value)} />          
-            <DatePicker
-                selected={startDate}
-                onChange={(date) => setStartDate(date)}
-                showTimeInput     
-                dateFormat="MM/dd/yyyy h:mm aa"   
-                withPortal  
-            />
-            <button onClick={() => handleClick()} className="inline-flex items-center shadow bg-spring-wood-800 text-white text-xs rounded px-4 py-2 hover:text-spring-wood-800 hover:bg-white">Add+</button>
-            <button onClick={()=>toggleEdit(()=>!edit)} className="inline-flex items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:bg-spring-wood-800 hover:text-white">Cancel</button>
-          </div> :
-          <> 
-          <button onClick={()=>toggleEdit(()=>!edit)} className="inline-flex items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:bg-spring-wood-800 hover:text-white transition duration-300 ease-in-out">Update Wordcount+</button>
-          </>}
-      <div className="h-3/4 overflow-y-auto">
-        {wordcounts && wordcounts.map(wc => <WordCount idx={wc.id} wordcount={wc}/>)}
+        <div id='writing-history-top-bar' className='flex flex-row items-center mb-6'>
+          <div className="flex-col font-medium text-xl m-2">Writing History</div>
+          <button onClick={()=>toggleEdit(()=>!edit)} className="flex inline-flex h-3/4 justify-center align-middle items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:bg-spring-wood-800 hover:text-white transition duration-300 ease-in-out">Add Wordcount</button>
+        </div>
+        {/* <AddWordCount /> */}
+        {edit && 
+              <div className="inline-flex">
+              <input className="entry" type="number" name="count" placeholder="Add new wordcount" value={newCount} onChange={(e) => handleInputChange(e.target.value)} />          
+              <DatePicker
+                  selected={startDate}
+                  onChange={(date) => setStartDate(date)}
+                  showTimeInput     
+                  dateFormat="MM/dd/yyyy h:mm aa"   
+                  withPortal  
+              />
+              <button onClick={() => handleClick()} className="inline-flex items-center shadow bg-spring-wood-800 text-white text-xs rounded px-4 py-2 hover:text-spring-wood-800 hover:bg-white">Add+</button>
+              <button onClick={()=>toggleEdit(()=>!edit)} className="inline-flex items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:bg-spring-wood-800 hover:text-white">Cancel</button>
+            </div> }
+           <div className="h-3/4 overflow-y-auto">
+          {wordcounts && wordcounts.map(wc => <WordCount idx={wc.id} wordcount={wc}/>)}
         </div>
       </div>
     )

@@ -28,7 +28,7 @@ function App() {
   const [editType,setEditType] = useState('add')
   const [flag,setFlag] = useState('')
   const [user] = useAuthState(auth)
-  const userRef = user ? firestore.collection('users').doc(auth.currentUser.uid) : null
+  //const userRef = user ? firestore.collection('users').doc(auth.currentUser.uid) : null
 
   const dummyProject = {
     name: '',
@@ -104,22 +104,22 @@ function App() {
         <Nav user={user} />     
         <div id="main" className="container px-4 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8">
             <div id='project-select' className='left m-2'>            
-              <ProjectSelect 
-                _setProject={_setProject} 
-                _addProject={_addProject} 
-                _userRef={userRef}
-                dummyProject={dummyProject}
-                edit={editing}
-                _setEdit={setEdit}
-                _setAdd={setAdd}
+              <ProjectSelect                 
+                currentUser={user}                
                 currentProject={currentProject}
                 defaultSelection={defaultSelection}
+                _setProject={_setProject} 
+                _setEdit={setEdit}
+                _setAdd={setAdd}
                 />                    
             </div>
             <div id='project-view' className=''>
               {!currentProject && 'Loading...'}
                 {currentProject && !editing &&(<>
-                <Project currentProject={currentProject} currentUser={user} setEdit={setEdit}/>                
+                <Project 
+                  currentProject={currentProject} 
+                  currentUser={user} 
+                  />                
                 </>)}
                 { editing && <EditForm editType={editType} 
                                         input={currentProject} 

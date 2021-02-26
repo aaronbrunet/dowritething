@@ -7,7 +7,7 @@ import { WordCount } from './WordCount'
 import { GoalList } from './GoalList'
 
 export const Project = (props) => {
-    const { currentProject, currentUser, setEdit } = props
+    const { currentProject, currentUser } = props
     const [value,loading,error] = useDocument(firestore.doc(`users/${currentUser.uid}/projects/${currentProject.id}`))
     const [project,setProject] = useState(currentProject)
     const [today,getToday] = useState(0)
