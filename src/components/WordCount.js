@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import firebase, { firestore } from '../firebase/firebase.js'
 import DatePicker from 'react-datepicker'
-import "react-datepicker/dist/react-datepicker.css";
 
 import { Modal } from './Modal'
 //import { _formatTime as formatTime } from '../utils/Utils.js'

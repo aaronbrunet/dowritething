@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { _interpretFields as interpretFields } from '../utils/Utils'
 import DatePicker from 'react-datepicker'
-import "react-datepicker/dist/react-datepicker.css";
 
 export const EditForm = (props) => {
     const [project,setProject] = useState(props.project)
