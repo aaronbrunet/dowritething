@@ -1,5 +1,4 @@
 import { React,useState } from 'react'
-//import './App.css';
 import "tailwindcss/tailwind.css"
 
 //firebase
@@ -9,11 +8,8 @@ import firebase, { auth, firestore } from './firebase/firebase.js'
 import { useAuthState } from 'react-firebase-hooks/auth'
 
 import { Nav } from './components/Nav'
-//import { Title } from './components/Title'
 import { ProjectSelect } from './components/ProjectSelect'
 import { Project } from './components/Project'
-//import { WordCount } from './components/WordCount'
-//import { GoalList } from './components/GoalList'
 import { EditForm } from './components/EditForm'
 
 //import { _formatTime as formatTime, _formatDate as formatDate, _interpretFields as interpretFields } from './utils/Utils.js'
