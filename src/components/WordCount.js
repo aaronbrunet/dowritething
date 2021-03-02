@@ -28,9 +28,11 @@ export const WordCount = (props) => {
       }).then(function(){
           console.log('New count added!')
           updateProject(newCount)
+          setNewCount(0)   
         }).catch(function(error) {
           console.error('Error adding new count: '+error)
         })
+         
     }  
 
     const updateProject = newCount => {
@@ -55,23 +57,35 @@ export const WordCount = (props) => {
         setNewCount(parseInt(input))
     }
 
-    const handleClick = () => {
+    const handleClick = () => {      
+      //setNewCount(()=>0)      
+      
+      if(newCount!==0){
+        var count = newCount        
         toggleEdit(()=>!edit)
-        newCount !== 0 && addCount(newCount) 
-        setStartDate(()=>new Date())       
+        count !== 0 && addCount(count) 
+        setStartDate(()=>new Date()) 
+      }
     }
 
+    const handleCancel = () => {
+        toggleEdit(()=>!edit)
+        setNewCount(()=>0)
+        setStartDate(new Date())
+    }
 
     return (
       <div className="container bg-white w-auto shadow-md p-6 m-6 h-full">
         <div id='writing-history-top-bar' className='flex flex-row items-center mb-6'>
           <div className="flex-col font-medium text-xl m-2">Writing History</div>
-          <button onClick={()=>toggleEdit(()=>!edit)} className="flex inline-flex h-3/4 justify-center align-middle items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:bg-spring-wood-800 hover:text-white transition duration-300 ease-in-out">Add Wordcount</button>
+          <button onClick={()=>toggleEdit(()=>!edit)} className="flex inline-flex h-3/4 justify-center align-middle items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:bg-spring-wood-800 hover:text-white transition duration-300 ease-in-out">
+            Add Progress
+          </button>
         </div>
         {/* <AddWordCount /> */}
         {edit && 
-              <Modal title='Update Your Progress'>              
-              <input className="" type="number" name="count" placeholder="Add new wordcount" value={newCount} onChange={(e) => handleInputChange(e.target.value)} />   
+            <Modal title='Update Your Progress'>              
+              <input type="number" name="count" value={newCount} onChange={(e) => handleInputChange(e.target.value)} />   
               <span className='flex inline-flex relative -ml-24 text-spring-wood-800'>words</span>       
               <DatePicker
                   selected={startDate}
@@ -79,10 +93,16 @@ export const WordCount = (props) => {
                   showTimeInput     
                   dateFormat="MM/dd/yyyy h:mm aa"   
                   withPortal 
-                  className='flex flex-row' 
+                  className='flex flex-row mt-2' 
               />
-              <button onClick={() => handleClick()} className="flex flex-row items-center shadow bg-spring-wood-800 text-white text-xs rounded px-4 py-2 hover:text-spring-wood-800 hover:bg-white">Add+</button>
-              <button onClick={()=>toggleEdit(()=>!edit)} className="flex flex-row items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:bg-spring-wood-800 hover:text-white">Cancel</button>
+              <div className='button-row flex flex-row mt-4'>
+                <button onClick={() => handleClick()} className="flex flex-col items-center shadow bg-spring-wood-800 text-white text-xs rounded px-4 py-2 mr-2 hover:text-spring-wood-800 hover:bg-white">
+                  Add Progress
+                </button>
+                <button onClick={()=> handleCancel()} className="flex flex-col items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:bg-spring-wood-800 hover:text-white">
+                  Cancel
+                </button>
+              </div>
             </Modal> }
            <div className="h-3/4 overflow-y-auto">
           {wordcounts && wordcounts.map(wc => <WordCount idx={wc.id} wordcount={wc}/>)}
@@ -98,6 +118,7 @@ export const WordCount = (props) => {
             //console.log('New count added!')
             var delCount = count * -1
             updateProject(delCount)
+            setNewCount(0)   
           }).catch(function(error) {
             console.error('Error deleting count: '+error)
           })
@@ -106,7 +127,7 @@ export const WordCount = (props) => {
       return(<>
         <p className="flex flex-row">Are you sure?</p>
         <div className="flex flex-row">
-        <button onClick={deleteCount} className="inline-flex items-center shadow bg-spring-wood-800 text-white text-xs rounded px-4 py-2 hover:text-spring-wood-800 hover:bg-white">Delete</button>
+        <button onClick={deleteCount} className="inline-flex items-center shadow bg-spring-wood-800 text-white text-xs rounded px-4 py-2 hover:text-spring-wood-800 hover:bg-white">Delete Progress</button>
         <button onClick={()=>toggleDel(false)} className="inline-flex items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:bg-spring-wood-800 hover:text-white">Cancel</button>
         </div>
       </>)
