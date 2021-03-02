@@ -71,7 +71,8 @@ export const WordCount = (props) => {
         {/* <AddWordCount /> */}
         {edit && 
               <Modal title='Update Your Progress'>              
-              <input className="entry flex flex-row" type="number" name="count" placeholder="Add new wordcount" value={newCount} onChange={(e) => handleInputChange(e.target.value)} />          
+              <input className="" type="number" name="count" placeholder="Add new wordcount" value={newCount} onChange={(e) => handleInputChange(e.target.value)} />   
+              <span className='flex inline-flex relative -ml-24 text-spring-wood-800'>words</span>       
               <DatePicker
                   selected={startDate}
                   onChange={(date) => setStartDate(date)}
