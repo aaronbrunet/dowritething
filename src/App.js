@@ -145,3 +145,16 @@ function App() {
 }
 
 export default App;
+
+
+// /* CSV */
+// 7e6551,938581,466362,8896ab,c5d5e4
+
+// /* Array */
+// ["7e6551","938581","466362","8896ab","c5d5e4"]
+
+// /* Object */
+// {"Raw Umber":"7e6551","Cinereous":"938581","Deep Space Sparkle":"466362","Cool Grey":"8896ab","Beau Blue":"c5d5e4"}
+
+// /* Extended Array */
+// [{"name":"Raw Umber","hex":"7e6551","rgb":[126,101,81],"cmyk":[0,20,36,51],"hsb":[27,36,49],"hsl":[27,22,41],"lab":[45,7,15]},{"name":"Cinereous","hex":"938581","rgb":[147,133,129],"cmyk":[0,10,12,42],"hsb":[13,12,58],"hsl":[13,8,54],"lab":[57,5,4]},{"name":"Deep Space Sparkle","hex":"466362","rgb":[70,99,98],"cmyk":[29,0,1,61],"hsb":[178,29,39],"hsl":[178,17,33],"lab":[40,-11,-3]},{"name":"Cool Grey","hex":"8896ab","rgb":[136,150,171],"cmyk":[20,12,0,33],"hsb":[216,20,67],"hsl":[216,17,60],"lab":[62,0,-13]},{"name":"Beau Blue","hex":"c5d5e4","rgb":[197,213,228],"cmyk":[14,7,0,11],"hsb":[209,14,89],"hsl":[209,36,83],"lab":[85,-2,-9]}]
