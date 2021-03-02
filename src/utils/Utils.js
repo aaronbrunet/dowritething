@@ -64,10 +64,16 @@ export const _interpretFields = (input,model,flag) => {
                 <textarea name={field.name} value={value}/></label></>)
       } 
       else {
-          value = input[field['name']]          
-            arr.push(<>
-                <label key={i} className='flex flex-row' htmlFor={field.name}>{label}
-                <input type={field.type} name={field.name} value={value}/></label></>)
+          value = input[field['name']]   
+          var content =  (<>
+          <label key={i} htmlFor={field.name}>{label}
+          <input type={field.type} name={field.name} value={value}/>
+          {field.name.indexOf('count')>0 && <span className='flex inline-flex relative -ml-24 text-spring-wood-800'>words</span>}
+          </label>
+          </>)
+          console.log(content)
+          arr.push(content)
+                
         }
       
     }
