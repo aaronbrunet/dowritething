@@ -11,6 +11,7 @@ import { Nav } from './components/Nav'
 import { ProjectSelect } from './components/ProjectSelect'
 import { Project } from './components/Project'
 import { EditForm } from './components/EditForm'
+import { Modal } from './components/Modal'
 
 //import { _formatTime as formatTime, _formatDate as formatDate, _interpretFields as interpretFields } from './utils/Utils.js'
 import { projectModel } from './globals/Constants'
@@ -111,21 +112,24 @@ function App() {
             </div>
             <div id='project-view' className=''>
               {!currentProject && 'Loading...'}
-                {currentProject && !editing &&(<>
+                {currentProject &&(<>
                 <Project 
                   currentProject={currentProject} 
                   currentUser={user} 
                   />                
                 </>)}
-                { editing && <EditForm editType={editType} 
-                                        input={currentProject} 
-                                        model={projectModel}
-                                        flag={flag} 
-                                        project={dummyProject} 
-                                        _addProject={_addProject}
-                                        _setEditing={setEditing}
-                                        editing={editing}
-                                        />}
+                { editing && 
+                <Modal title='Manage Projects'>
+                    <EditForm editType={editType} 
+                      input={currentProject}
+                      model={projectModel}                                        
+                      flag={flag}                       
+                      project={dummyProject}                       
+                      _addProject={_addProject}                      
+                      _setEditing={setEditing}                      
+                      editing={editing} />
+                </Modal>
+                }
               
             </div> 
           </div> 
