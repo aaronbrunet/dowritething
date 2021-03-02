@@ -57,7 +57,12 @@ export const _interpretFields = (input,model,flag) => {
                     disabled={flag==='edit'}
                 />}
             </label></>)
-        } 
+      } else if (field.type === 'textarea'){
+        value = input[field['name']]          
+            arr.push(<>
+                <label key={i} className='flex flex-row' htmlFor={field.name}>{label}
+                <textarea name={field.name} value={value}/></label></>)
+      } 
       else {
           value = input[field['name']]          
             arr.push(<>
