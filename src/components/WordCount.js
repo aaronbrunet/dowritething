@@ -3,6 +3,7 @@ import firebase, { firestore } from '../firebase/firebase.js'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
 
+import { Modal } from './Modal'
 //import { _formatTime as formatTime } from '../utils/Utils.js'
 
 export const WordCount = (props) => {  
@@ -69,18 +70,20 @@ export const WordCount = (props) => {
         </div>
         {/* <AddWordCount /> */}
         {edit && 
-              <div className="inline-flex">
-              <input className="entry" type="number" name="count" placeholder="Add new wordcount" value={newCount} onChange={(e) => handleInputChange(e.target.value)} />          
+              <Modal>
+              <div className="">
+              <input className="entry flex flex-row" type="number" name="count" placeholder="Add new wordcount" value={newCount} onChange={(e) => handleInputChange(e.target.value)} />          
               <DatePicker
                   selected={startDate}
                   onChange={(date) => setStartDate(date)}
                   showTimeInput     
                   dateFormat="MM/dd/yyyy h:mm aa"   
-                  withPortal  
+                  withPortal 
+                  className='flex flex-row' 
               />
-              <button onClick={() => handleClick()} className="inline-flex items-center shadow bg-spring-wood-800 text-white text-xs rounded px-4 py-2 hover:text-spring-wood-800 hover:bg-white">Add+</button>
-              <button onClick={()=>toggleEdit(()=>!edit)} className="inline-flex items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:bg-spring-wood-800 hover:text-white">Cancel</button>
-            </div> }
+              <button onClick={() => handleClick()} className="flex flex-row items-center shadow bg-spring-wood-800 text-white text-xs rounded px-4 py-2 hover:text-spring-wood-800 hover:bg-white">Add+</button>
+              <button onClick={()=>toggleEdit(()=>!edit)} className="flex flex-row items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:bg-spring-wood-800 hover:text-white">Cancel</button>
+            </div></Modal> }
            <div className="h-3/4 overflow-y-auto">
           {wordcounts && wordcounts.map(wc => <WordCount idx={wc.id} wordcount={wc}/>)}
         </div>
