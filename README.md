@@ -1,4 +1,4 @@
-# DO WRITE THING - With Create React App
+# DO THE WRITE THING
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
