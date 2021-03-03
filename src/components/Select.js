@@ -19,6 +19,7 @@ export const Select = ( props ) => {
             _onChange(options[index])
             setSelected(()=>selection.id)
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     },[selection])
     
     return (

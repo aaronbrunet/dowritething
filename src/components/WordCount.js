@@ -86,14 +86,15 @@ export const WordCount = (props) => {
             <Modal title='Update Your Progress'>              
               <input type="number" name="count" value={newCount} onChange={(e) => handleInputChange(e.target.value)} />   
               <span className='flex inline-flex relative -ml-24 text-spring-wood-800'>words</span>       
-              <DatePicker
-                  selected={startDate}
-                  onChange={(date) => setStartDate(date)}
-                  showTimeInput     
-                  dateFormat="MM/dd/yyyy h:mm aa"   
-                  withPortal 
-                  className='flex flex-row mt-2' 
-              />
+              <div className='flex flex-row mt-2'>
+                <DatePicker
+                    selected={startDate}
+                    onChange={(date) => setStartDate(date)}
+                    showTimeInput     
+                    dateFormat="MM/dd/yyyy h:mm aa" 
+                    
+                />
+              </div>
               <div className='button-row flex flex-row mt-4'>
                 <button onClick={() => handleClick()} className="flex flex-col items-center shadow bg-spring-wood-800 text-white text-xs rounded px-4 py-2 mr-2 hover:text-spring-wood-800 hover:bg-white">
                   Add Progress
