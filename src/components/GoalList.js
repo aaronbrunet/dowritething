@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import firebase from '../firebase/firebase.js'
+import firebase, { firestore } from '../firebase/firebase.js'
 import DatePicker from 'react-datepicker'
 
 import { Modal } from './Modal'
@@ -14,7 +14,8 @@ const dummyGoal = {
   type: 'fixed',
   repeat: null,
   active: false,
-  completed: false    
+  completed: false, 
+  dailyGoal: 0   
 }
 
 export const GoalList = (props) => {  
@@ -35,6 +36,7 @@ export const GoalList = (props) => {
       editGoal.type === 'recurring' ? length = minDate : length = getLength(editGoal.start,editGoal.end)
       var count = getDailyCount(editGoal.count,length)
       setDailyGoal(()=>count)
+      editGoal.dailyGoal = count
     }    
   },[editGoal.start, editGoal.end, editGoal.count, editGoal.type, minDate])
 
@@ -61,14 +63,29 @@ export const GoalList = (props) => {
           end: newGoal.end,
           type: newGoal.type,
           repeat: newGoal.repeat,
-          active: false,
-          completed: false
+          active: true,
+          completed: false,
+          dailyGoal: newGoal.dailyGoal
       }).then(function(){
           console.log('New goal added!')          
+          updateProject(newGoal.dailyGoal)
         }).catch(function(error) {
           console.error('Error adding new count: '+error)
         })         
   } 
+
+
+  const updateProject = goalCount => { 
+    var timestamp = firebase.firestore.Timestamp.now()      
+    firestore.collection(`users/${currentUser.uid}/projects`).doc(currentProject.id).update({
+      dailyGoal: goalCount,
+      revised: timestamp
+    }).then(function(){
+      console.log('Time and count updated!')
+    }).catch(function(error) {
+      console.error('Error writing to document: '+error)
+    })
+  }
 
   const handleRepeatChange = (input) => {
     setEditGoal({...editGoal,repeat:input})
@@ -198,18 +215,19 @@ export const GoalList = (props) => {
     const time = timestamp.toDate().toLocaleTimeString()
     const _start = start.toDate().toLocaleDateString()
     const _end = end.toDate().toLocaleDateString()
-    return (<div className='m-2 goal-item prose'>  
-    <h4 className='goal-count'>{count} words</h4>
-    { type === 'fixed' && (<>
-      <p className='goal-fixed'>By {_end} <br/> 
-      Starting on {_start}</p> 
-      <p className="text-xs text-gray-400">Added on {date} at {time}</p>
-    </>)}
-    { type === 'recurring' && (<>
-      <p className='goal-repeat'>Per {repeat}</p>
-      <p className='goal-repeat'>From {_start} to {_end}</p>
-      <p className='goal-added'>Added on {date} at {time}</p>
-    </>)}
+    return (
+    <div className='m-2 goal-item prose border-2'>  
+      <h4 className='goal-count'>{count} words</h4>
+      { type === 'fixed' && (<>
+        <p className='goal-fixed'>By {_end} <br/> 
+        Starting on {_start}</p> 
+        <p className="text-xs text-gray-400">Added on {date} at {time}</p>
+      </>)}
+      { type === 'recurring' && (<>
+        <p className='goal-repeat'>{repeat}</p>
+        <p className='goal-repeat'>From {_start} to {_end}</p>
+        <p className='goal-added'>Added on {date} at {time}</p>
+      </>)}
     </div>)
   }
 }
