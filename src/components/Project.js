@@ -90,9 +90,9 @@ export const Project = (props) => {
                     </div>                    
                     
                     <div id="project-info" className="flex flex-col h-full justify-center items-center w-1/3 prose">                                        
-                    <div className='flex flex-row items-center text-xl font-semibold'>{today} words today</div>                        
-                    {project.dailyGoal && (<div className="flex flex-row items-center text-2xl font-semibold">/ { project.dailyGoal } words needed today</div>)}                   
-                        {/* <div className="flex flex-row items-center text-sm">{project.timestamp && ('Since ' + formatDate(project.timestamp,'slash'))}</div>                     */}
+                    <div className='flex flex-row items-center text-xl font-semibold'>{today}{ project.dailyGoal && ` / ${project.dailyGoal}`}</div>                        
+                    <div className="flex flex-row items-center text-xl font-semibold">words for today's goal</div>
+                    {project.dailyGoal && today >= project.dailyGoal ? (<div>Great job!</div>):(<div>Keep going!</div>)}    {/* <div className="flex flex-row items-center text-sm">{project.timestamp && ('Since ' + formatDate(project.timestamp,'slash'))}</div>                     */}
 
                     </div>
 
