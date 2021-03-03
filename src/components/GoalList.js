@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { firestore } from '../firebase/firebase.js'
+import firebase from '../firebase/firebase.js'
 import DatePicker from 'react-datepicker'
 
 import { Modal } from './Modal'
@@ -56,7 +56,7 @@ export const GoalList = (props) => {
       // const wcRef = firestore.collection(`users/${currentUser.uid}/projects/${currentProject.id}/wordcount`)
       goalRef.add({
           count: newGoal.count,
-          timestamp: firestore.Timestamp.now(),
+          timestamp: firebase.firestore.Timestamp.now(),
           start: newGoal.start,
           end: newGoal.end,
           type: newGoal.type,
@@ -100,6 +100,7 @@ export const GoalList = (props) => {
   }
 
   const completeEdit = () => {
+    addGoal(editGoal)
     setCurrentGoal(()=>editGoal)
     setEdit(()=>!edit)
     setEditGoal(()=>dummyGoal)
@@ -182,8 +183,8 @@ export const GoalList = (props) => {
           <div>That's {dailyGoal} words a day!</div>
         )}
         <div className='button-row flex flex-row mt-4'>
-          <button onClick={()=> completeEdit()} className="flex flex-col items-center shadow bg-spring-wood-800 text-white text-xs rounded px-4 py-2 mr-2 hover:text-spring-wood-800 hover:bg-white">
-          Add Progress</button>
+          <button onClick={()=> completeEdit()} className='flex flex-col items-center shadow bg-spring-wood-800 text-white text-xs rounded px-4 py-2 mr-2 hover:text-spring-wood-800 hover:bg-white'>
+          Add Goal</button>
           <button onClick={()=> handleCancel()} className="flex flex-col items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:bg-spring-wood-800 hover:text-white">
           Cancel</button>
         </div>

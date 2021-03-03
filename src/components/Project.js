@@ -20,7 +20,8 @@ export const Project = (props) => {
 
     //Goal
     const goalRef = firestore.collection(`users/${currentUser.uid}/projects/${currentProject.id}/goals`)
-    const gQuery = goalRef.where('active','==',true).limit(3)
+    //const gQuery = goalRef.where('active','==',true).limit(3)
+    const gQuery = goalRef.where('completed','==',false).limit(3)
     const [goals] = useCollectionData(gQuery, {idField: 'id'})
 
     useEffect(() => {        
