@@ -13,9 +13,15 @@ export const Project = (props) => {
     const [today,getToday] = useState(0)
     const projectsRef = firestore.collection(`users/${currentUser.uid}/projects/`)
 
+    //Wordcount
     const wcRef = firestore.collection(`users/${currentUser.uid}/projects/${currentProject.id}/wordcount`)
-    const query = wcRef.orderBy('timestamp','asc')//.limit(20)
-    const [wordcounts] = useCollectionData(query, {idField: 'id'})
+    const wcQuery = wcRef.orderBy('timestamp','asc')//.limit(20)
+    const [wordcounts] = useCollectionData(wcQuery, {idField: 'id'})
+
+    //Goal
+    const goalRef = firestore.collection(`users/${currentUser.uid}/projects/${currentProject.id}/goals`)
+    const gQuery = goalRef.where('active','==',true).limit(3)
+    const [goals] = useCollectionData(gQuery, {idField: 'id'})
 
     useEffect(() => {        
         //value ? project.current = value.data() : project.current = null
@@ -96,11 +102,21 @@ export const Project = (props) => {
                 <div id='project-container-body' className='flex flex-row h-4/5'>
                     <div id='project-container-body-inner-left' className='flex flex-col w-2/3 h-full'>
                         <div className="flex flex-col h-1/5">   
-                            <GoalList currentProject={project}/>
+                            <GoalList 
+                                currentProject={project} 
+                                currentUser={currentUser}
+                                goals={goals}
+                                goalRef={goalRef}
+                            />
                         </div> 
                     </div>
                     <div id='project-container-body-inner-right' className="flex flex-col w-1/3 h-full">   
-                        <WordCount currentProject={project} currentUser={currentUser} wordcounts={wordcounts}/>
+                        <WordCount 
+                            currentProject={project} 
+                            currentUser={currentUser} 
+                            wordcounts={wordcounts}
+                            wcRef={wcRef}
+                        />
                     </div>                
                 </div>
             </div>)}

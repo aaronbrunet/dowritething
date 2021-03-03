@@ -6,11 +6,11 @@ import { Modal } from './Modal'
 //import { _formatTime as formatTime } from '../utils/Utils.js'
 
 export const WordCount = (props) => {  
-    const { currentUser, currentProject } = props  
-     const wcRef = firestore.collection(`users/${currentUser.uid}/projects/${currentProject.id}/wordcount`)
+    const { currentUser, currentProject, wordcounts, wcRef } = props  
+     //const wcRef = firestore.collection(`users/${currentUser.uid}/projects/${currentProject.id}/wordcount`)
     // const query = wcRef.orderBy('timestamp','asc')//.limit(20)
     // const [wordcounts] = useCollectionData(query, {idField: 'id'})
-    const wordcounts = props.wordcounts
+    //const wordcounts = props.wordcounts
 
     const [newCount,setNewCount] = useState(0)
     const [edit,toggleEdit] = useState(false)

@@ -32,8 +32,10 @@ export const ProjectSelect = (props) => {
             _onChange={_setProject} 
             selection={selection}     
             />
-          <button onClick={()=>_setEdit('edit')} className="flex inline-flex h-3/4 justify-center align-middle text-center content-center items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:bg-spring-wood-800 hover:text-white transition duration-300 ease-in-out">Edit</button>
-          <button onClick={()=>_setAdd('add')} className="flex inline-flex h-3/4 justify-center align-middle items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:bg-spring-wood-800 hover:text-white  transition duration-300 ease-in-out">Add Project+</button>    
+          <button onClick={()=>_setEdit('edit')} className="flex inline-flex h-3/4 mr-2 justify-center align-middle text-center content-center items-center border border-opacity-0 shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:bg-spring-wood-800 hover:text-white transition duration-500 ease-in-out">
+            Edit</button>
+          <button onClick={()=>_setAdd('add')} className="flex inline-flex h-3/4 justify-center align-middle items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 border-spring-wood-800 border-solid border border-opacity-0 hover:border-opacity-100 transition duration-500 ease-in-out">
+            Add Project</button>    
       </span>
     </div>)
   }
