@@ -35,9 +35,8 @@ export const GoalList = (props) => {
       editGoal.type === 'recurring' ? length = minDate : length = getLength(editGoal.start,editGoal.end)
       var count = getDailyCount(editGoal.count,length)
       setDailyGoal(()=>count)
-    }
-    
-  })
+    }    
+  },[editGoal.start, editGoal.end, editGoal.count, editGoal.type, minDate])
 
   useEffect(()=>{
     if(editGoal.type === 'recurring'){
@@ -144,6 +143,7 @@ export const GoalList = (props) => {
             placeholderText='Set start date'
             dateFormat="MM/dd/yyyy"   
             className='inline-flex m-2' 
+            mandatory
           />
         </div>
         <div className='flex flex-row'>I will write</div>
