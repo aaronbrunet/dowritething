@@ -1,16 +1,28 @@
 import React, { useState, useEffect } from'react'
 import firebase, { firestore } from '../firebase/firebase.js'
 import { useCollectionData } from 'react-firebase-hooks/firestore'
+import DatePicker from 'react-datepicker'
 
 import { Select } from './Select'
 import { Modal } from './Modal'
 import { ToggleDefault } from '../utils/Utils.js'
 
+const dummyProject = {
+  name: '',
+  wordcount: 0,
+  description: '',
+  timestamp: new Date()
+}
+
 export const ProjectSelect = (props) => {    
   const { currentUser, currentProject, defaultSelection, _setProject, _setAdd } = props
   const [editProject,setEditProject] = useState(currentProject)
+  const [addProject,setAddProject] = useState(dummyProject)
   const [isOpen,toggleOpen] = useState(false)
   const [edit,toggleEdit] = useState(false)
+  const [add,toggleAdd] = useState(false)
+  const [startDate,setStartDate] = useState(new Date())
+  const [type,setType] = useState('new')
 
   //Project Refs
   const projectRef = firestore.collection(`users/${currentUser.uid}/projects`)  
@@ -18,7 +30,7 @@ export const ProjectSelect = (props) => {
   const [projects] = useCollectionData(query,{idField: 'id'})
   
   useEffect(()=>{
-    editProject.id !== currentProject.id && setEditProject(currentProject) 
+    editProject?.id !== currentProject?.id && setEditProject(currentProject) 
   },[currentProject,editProject])
 
   const updateProject = (project) => {       
@@ -38,8 +50,32 @@ export const ProjectSelect = (props) => {
     })
   }
 
+  
+/*
+  const deleteProject = (project) => {
+    const id = project.id
+    const delRef = projectRef.doc(id)       
+    delRef.delete().then(() => {
+      console.log('Deleted Project '+ id)  
+      //console.log('New count added!')
+    }).catch(function(error) {
+      console.error('Error deleting count: '+error)
+    })
+    
+  }
+*/
+  const handleAdd = () => {
+    add && setAddProject(dummyProject)
+    toggleAdd(()=>!add)
+  }
+
+  const handleAddSubmit = () => {
+
+  }
+
   const handleCancel = () => {
-    toggleEdit(()=> !edit)
+    add && toggleAdd(()=>!add)
+    edit && toggleEdit(()=> !edit)
     setEditProject(currentProject)
   }
 
@@ -68,9 +104,37 @@ export const ProjectSelect = (props) => {
             />
           <button onClick={()=>toggleEdit(()=>!edit)} className="flex inline-flex h-3/4 mr-2 justify-center align-middle text-center content-center items-center border border-opacity-0 shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:bg-spring-wood-800 hover:text-white transition duration-500 ease-in-out">
             Edit</button>
-          <button onClick={()=>_setAdd('add')} className="flex inline-flex h-3/4 justify-center align-middle items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 border-spring-wood-800 border-solid border border-opacity-0 hover:border-opacity-100 transition duration-500 ease-in-out">
+          <button onClick={()=>handleAdd()} className="flex inline-flex h-3/4 justify-center align-middle items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 border-spring-wood-800 border-solid border border-opacity-0 hover:border-opacity-100 transition duration-500 ease-in-out">
             Add Project</button>    
       </span>
+      {add && (<Modal title='Add a New Project'>
+        <input onChange={(e) => setAddProject({...addProject, name:e.target.value})} value={addProject.name} className="flex flex-row" type="text" name="name" placeholder="Add a descriptive name" />
+        <input onChange={(e) => setAddProject({...addProject, description:e.target.value})} value={addProject.description} className="flex flex-row" type="text" name="description" placeholder="Add description" />
+        <DatePicker
+              selected={addProject.timestamp}
+              onChange={(date) => setAddProject({...addProject,timestamp:date})}
+              showTimeInput     
+              dateFormat="MM/dd/yyyy h:mm aa"
+              disabled={type==='new'}
+          />
+        <div className="entry-radio-group">
+          <label htmlFor="new-project">
+            <input type="radio" onClick={()=>setType('new')} name="new-project" value='new' checked={type==='new'}/>New Project
+          </label>
+          <label htmlFor="old-project">
+            <input type="radio" onClick={()=>setType('old')} name="old-project" value='old' checked={type==='old'} />Existing Project
+          </label>
+        </div>
+        <div className='button-row flex flex-row mt-4'>
+          <button onClick={()=>props._addProject(addProject)} className="flex flex-col items-center shadow bg-spring-wood-800 text-white text-xs rounded px-4 py-2 mr-2 hover:text-spring-wood-800 hover:bg-white">
+          Add Project
+          </button>
+          <button onClick={()=> handleCancel()} className="flex flex-col items-center shadow bg-white text-spring-wood-800 text-xs rounded px-4 py-2 hover:bg-spring-wood-800 hover:text-white">
+            Cancel
+          </button>
+        </div>
+      </Modal>)}
+
       {edit &&
         <Modal title={`Edit ${currentProject.name}`} delete={true} width={'sm'}>
           <label htmlFor='name' className='mt-2'>

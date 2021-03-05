@@ -27,12 +27,6 @@ function App() {
   const [user] = useAuthState(auth)
   //const userRef = user ? firestore.collection('users').doc(auth.currentUser.uid) : null
 
-  const dummyProject = {
-    name: '',
-    wordcount: 0,
-    description: ''
-  }
-
   const setEdit = (flag) => {
     //editType === 'edit' ? setEditType('') : setEditType('edit')
     setEditType('edit')
@@ -108,6 +102,7 @@ function App() {
                 _setProject={_setProject} 
                 _setEdit={setEdit}
                 _setAdd={setAdd}
+                _addProject={_addProject}
                 />                    
             </div>
             <div id='project-view' className=''>
