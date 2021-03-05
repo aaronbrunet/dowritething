@@ -118,19 +118,6 @@ function App() {
                   currentUser={user} 
                   />                
                 </>)}
-                { editing && 
-                <Modal title='Manage Projects'>
-                    <EditForm editType={editType} 
-                      input={currentProject}
-                      model={projectModel}                                        
-                      flag={flag}                       
-                      project={dummyProject}                       
-                      _addProject={_addProject}                      
-                      _setEditing={setEditing}                      
-                      editing={editing} />
-                </Modal>
-                }
-              
             </div> 
           </div> 
           </>

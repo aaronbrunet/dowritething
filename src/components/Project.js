@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { firestore } from '../firebase/firebase.js'
 import { useDocument, useCollectionData } from 'react-firebase-hooks/firestore'
 
-import { _formatDate as formatDate, _formatTime as formatTime, _getSum as getSum } from '../utils/Utils.js'
+import { _formatDate as formatDate, _formatTime as formatTime, _getSum as getSum, ToggleDefault } from '../utils/Utils.js'
 import { WordCount } from './WordCount'
 import { GoalList } from './GoalList'
 
@@ -15,7 +15,7 @@ export const Project = (props) => {
 
     //Wordcount
     const wcRef = firestore.collection(`users/${currentUser.uid}/projects/${currentProject.id}/wordcount`)
-    const wcQuery = wcRef.orderBy('timestamp','asc')//.limit(20)
+    const wcQuery = wcRef.orderBy('timestamp','desc').limit(5)
     const [wordcounts] = useCollectionData(wcQuery, {idField: 'id'})
 
     //Goal
@@ -35,29 +35,6 @@ export const Project = (props) => {
     },[value,currentProject])
     //console.log(JSON.stringify(value.data()))
     
-    const ToggleDefault = () => {
-        //console.log(currentProject.id)        
-        projectsRef.get()
-        .then((snapshot)=>{
-            snapshot.forEach((proj) => {
-               //console.log(proj.id)
-            if(proj.id===currentProject.id){
-                //console.log(`Setting ${proj.data().name} to default`)   
-                var defaultStatus = proj.data().default             
-                projectsRef.doc(proj.id).update({
-                    default: !defaultStatus
-                })
-            } else {
-                //console.log(`Removing ${proj.data().name} from default`)
-                if(proj.data().default === true){
-                    projectsRef.doc(proj.id).update({
-                        default: false
-                    })
-                }
-            }})
-        })
-    }
-
     useEffect(() => {
         if(wordcounts) {                
             console.log(formatDate(new Date())) 
@@ -79,7 +56,7 @@ export const Project = (props) => {
                     <div id='project-title' className="flex flex-col h-full justify-center align-center items-center text-left px-6 w-1/3">
                         <div id='project-title-bar' className='flex flex-row overflow-hidden w-full h-auto'>
                             <div className="text-4xl text-left flex-col font-bold mr-4">{project.name}</div>                       
-                            <button onClick={()=>ToggleDefault()} className='flex-col' aria-label="Set Default" title="Set Default">                        
+                            <button onClick={()=>ToggleDefault(projectsRef,currentProject)} className='flex-col' aria-label="Set Default" title="Set Default">                        
                                 <svg className="mt-2 justify-items-center content-center items-center h-full w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" stroke='currentColor' fill={project.default ? `currentColor` : `none`}>                        
                                 <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
                                 </svg>

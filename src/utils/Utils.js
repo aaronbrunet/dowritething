@@ -81,10 +81,33 @@ export const _interpretFields = (input,model,flag) => {
     return arr
   }
 
-  export const _getSum = (array,property) => {
+export const _getSum = (array,property) => {
     if(array.length > 0){
         return array.reduce((a,b)=> a + (b[property] || 0), 0)
     } else {
         return 0
     }
+}
+
+export const ToggleDefault = (projectsRef,currentProject) => {
+    //console.log(currentProject.id)        
+    projectsRef.get()
+    .then((snapshot)=>{
+        snapshot.forEach((proj) => {
+           //console.log(proj.id)
+        if(proj.id===currentProject.id){
+            //console.log(`Setting ${proj.data().name} to default`)   
+            var defaultStatus = proj.data().default             
+            projectsRef.doc(proj.id).update({
+                default: !defaultStatus
+            })
+        } else {
+            //console.log(`Removing ${proj.data().name} from default`)
+            if(proj.data().default === true){
+                projectsRef.doc(proj.id).update({
+                    default: false
+                })
+            }
+        }})
+    })
 }
